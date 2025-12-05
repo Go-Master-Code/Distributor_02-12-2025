@@ -165,31 +165,6 @@ func TestCetakFaktur(t *testing.T) {
 
 func TestCetakFakturMultiHeader(t *testing.T) {
 	data := []dto.PenjualanDetailResponse{
-		// {
-		// 	BarangID:       1,
-		// 	BarangKode:     "VP001",
-		// 	BarangArtikel:  "BLAZE",
-		// 	BarangWarna:    "ALL BLACK",
-		// 	BarangUkuran:   "37-44",
-		// 	BarangKategori: "D",
-		// 	Size:           41,
-		// 	Qty:            5,
-		// 	Harga:          139800,
-		// 	Subtotal:       699000,
-		// },
-		// {
-		// 	BarangID:       1,
-		// 	BarangKode:     "VP001",
-		// 	BarangArtikel:  "BLAZE",
-		// 	BarangWarna:    "ALL BLACK",
-		// 	BarangUkuran:   "37-44",
-		// 	BarangKategori: "D",
-		// 	Size:           40,
-		// 	Qty:            4,
-		// 	Harga:          139800,
-		// 	Subtotal:       559200,
-		// },
-
 		{
 			BarangID:       258,
 			BarangKode:     "CAV001",
@@ -270,9 +245,9 @@ func TestCetakFakturMultiHeader(t *testing.T) {
 
 	pivot := helper.BuildPivot(data, kategoriSizeRange)
 
-	output := helper.PrintHeader(masterJual, kategoriSizeRange, kategoriLabel, totalSizes)
+	output := helper.PrintHeader("DESLE", masterJual, kategoriSizeRange, kategoriLabel, totalSizes)
 	output += helper.PrintData(pivot, kategoriSizeRange)
-	output += helper.PrintSumarry(masterJual)
+	output += helper.PrintSumarry(masterJual, 18)
 
 	err := helper.WriteToFile("faktur.txt", output)
 	if err != nil {

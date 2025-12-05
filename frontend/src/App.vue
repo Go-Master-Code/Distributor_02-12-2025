@@ -7,7 +7,8 @@
       <router-link to="/artikel">Artikel</router-link> |
       <router-link to="/barang">Barang</router-link> |
       <router-link to="/kartu_stok">Kartu Stok</router-link> |
-      <router-link to="/penjualan">Penjualan</router-link>
+      <router-link to="/penjualan">Penjualan</router-link> |
+      <router-link to="/laporan_penjualan">Laporan Penjualan</router-link>
     </nav>
     <router-view></router-view>
   </div>

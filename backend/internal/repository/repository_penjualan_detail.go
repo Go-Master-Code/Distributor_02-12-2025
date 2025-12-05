@@ -8,6 +8,7 @@ import (
 
 type RepositoryPenjualanDetail interface {
 	GetPenjualanDetailById(id int) ([]model.PenjualanDetail, error)
+	GetPenjualanDetailByFakturIds(ids []uint) ([]model.PenjualanDetail, error)
 	// CreatePenjualan(penjualan model.Penjualan) (model.Penjualan, error)
 }
 
@@ -21,6 +22,12 @@ func NewRepositoryPenjualanDetail(db *gorm.DB) RepositoryPenjualanDetail {
 
 func (r *repositoryPenjualanDetail) GetPenjualanDetailById(id int) ([]model.PenjualanDetail, error) {
 	var detilJual []model.PenjualanDetail
-	err := r.db.Preload("Barang.KategoriBarang").Preload("Barang.Artikel").Preload("Barang.Warna").Preload("Barang.Ukuran").Where("penjualan_id = ?", id).Find(&detilJual).Error
+	err := r.db.Preload("Barang.KategoriBarang").Preload("Barang.Merk").Preload("Barang.Artikel").Preload("Barang.Warna").Preload("Barang.Ukuran").Where("penjualan_id = ?", id).Find(&detilJual).Error
+	return detilJual, err
+}
+
+func (r *repositoryPenjualanDetail) GetPenjualanDetailByFakturIds(ids []uint) ([]model.PenjualanDetail, error) {
+	var detilJual []model.PenjualanDetail
+	err := r.db.Preload("Barang.KategoriBarang").Preload("Barang.Merk").Preload("Barang.Artikel").Preload("Barang.Warna").Preload("Barang.Ukuran").Where("penjualan_id IN ?", ids).Find(&detilJual).Error
 	return detilJual, err
 }

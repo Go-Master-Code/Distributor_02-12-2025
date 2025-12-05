@@ -2,44 +2,14 @@
     <div class="container-fluid">
         <form @submit.prevent="handleSubmit">
             <div class="row mb-3 align-items-center">
-                <label for="kode" class="col-sm-2 col-form-label">Kode Barang:</label>
-                <div class="col-sm-10">
+                <label for="kode" class="col-sm-1 col-form-label">Kode:</label>
+                <div class="col-sm-2">
                     <input id="kode" v-model="form.kode" type="text" class="form-control" autocomplete="off" autofocus required />
                 </div>
-            </div>
-            <!-- Multiselect merk -->
-            <div class="row mb-3 align-items-center">
-                <!-- nama label harus sesuai dengan response api json (nama) -->
-                <label for="merk" class="col-sm-2 col-form-label">Merk:</label> 
-                <div class="col-sm-10"> 
-                    <Multiselect
-                        ref="merkRef"
-                        id="merk"
-                        v-model="selectedMerk"
-                        mode="single"
-                        :options="merkList"
-                        :searchable="true"
-                        :filter-results="false"
-                        :clear-on-select="true"
-                        :close-on-select="true"
-                        :internal-search="false"
-                        :loading="loading"
-                        autocomplete="off"
-                        placeholder="Ketik untuk mencari merk..."
-                        label="nama"
-                        value-prop="id"
-                        track-by="id"
-                        @search-change="onSearchMerk"
-                        @select="onSelectMerk"
-                    />
-                </div>   
-            </div>
 
-            <!-- Multiselect artikel -->
-            <div class="row mb-3 align-items-center">
                 <!-- nama label harus sesuai dengan response api json (nama) -->
-                <label for="artikel" class="col-sm-2 col-form-label">Artikel:</label> 
-                <div class="col-sm-10"> 
+                <label for="artikel" class="col-sm-1 col-form-label">Artikel:</label> 
+                <div class="col-sm-5"> 
                     <Multiselect
                         ref="artikelRef"
                         id="artikel"
@@ -62,12 +32,36 @@
                     />
                 </div>   
             </div>
-
-            <!-- Multiselect warna -->
+            <!-- Multiselect merk -->
             <div class="row mb-3 align-items-center">
                 <!-- nama label harus sesuai dengan response api json (nama) -->
-                <label for="warna" class="col-sm-2 col-form-label">Warna:</label> 
-                <div class="col-sm-10"> 
+                <label for="merk" class="col-sm-1 col-form-label">Merk:</label> 
+                <div class="col-sm-3"> 
+                    <Multiselect
+                        ref="merkRef"
+                        id="merk"
+                        v-model="selectedMerk"
+                        mode="single"
+                        :options="merkList"
+                        :searchable="true"
+                        :filter-results="false"
+                        :clear-on-select="true"
+                        :close-on-select="true"
+                        :internal-search="false"
+                        :loading="loading"
+                        autocomplete="off"
+                        placeholder="Ketik untuk mencari merk..."
+                        label="nama"
+                        value-prop="id"
+                        track-by="id"
+                        @search-change="onSearchMerk"
+                        @select="onSelectMerk"
+                    />
+                </div>   
+
+                <!-- nama label harus sesuai dengan response api json (nama) -->
+                <label for="warna" class="col-sm-1 col-form-label">Warna:</label> 
+                <div class="col-sm-3"> 
                     <Multiselect
                         ref="warnaRef"
                         id="warna"
@@ -88,14 +82,11 @@
                         @search-change="onSearchWarna"
                         @select="onSelectWarna"
                     />
-                </div>   
-            </div>
-
-            <!-- Multiselect kategori barang: dewasa, anak, kids -->
-            <div class="row mb-3 align-items-center">
+                </div>
+                
                 <!-- nama label harus sesuai dengan response api json (nama) -->
-                <label for="kategori" class="col-sm-2 col-form-label">Kategori:</label> 
-                <div class="col-sm-10"> 
+                <label for="kategori" class="col-sm-1 col-form-label">Kategori:</label> 
+                <div class="col-sm-3"> 
                     <Multiselect
                         ref="kategoriRef"
                         id="kategori"
@@ -109,21 +100,21 @@
                         :internal-search="false"
                         :loading="loading"
                         autocomplete="off"
-                        placeholder="Ketik untuk mencari kategori barang..."
+                        placeholder="Ketik untuk mencari kategori ..."
                         label="nama"
                         value-prop="id"
                         track-by="id"
                         @search-change="onSearchKategori"
                         @select="onSelectKategori"
                     />
-                </div>   
+                </div>  
             </div>
 
             <!-- Multiselect jenis barang: sepatu, sandal, kaos kaki, dll -->
             <div class="row mb-3 align-items-center">
                 <!-- nama label harus sesuai dengan response api json (nama) -->
-                <label for="jenis" class="col-sm-2 col-form-label">Jenis Barang:</label> 
-                <div class="col-sm-10"> 
+                <label for="jenis" class="col-sm-1 col-form-label">Jenis:</label> 
+                <div class="col-sm-3"> 
                     <Multiselect
                         ref="jenisRef"
                         id="jenis"
@@ -145,12 +136,9 @@
                         @select="onSelectJenis"
                     />
                 </div>   
-            </div>
 
-            <!-- Multiselect ukuran -->
-            <div class="row mb-3 align-items-center">
-                <label for="ukuran" class="col-sm-2 col-form-label">Ukuran:</label> 
-                <div class="col-sm-10"> 
+                <label for="ukuran" class="col-sm-1 col-form-label">Ukuran:</label> 
+                <div class="col-sm-3"> 
                     <Multiselect
                         ref="ukuranRef"
                         id="ukuran"
@@ -171,7 +159,7 @@
                         @search-change="onSearchUkuran"
                         @select="onSelectUkuran"
                     />
-                </div>   
+                </div>
             </div>
 
             <!-- Tombol Simpan -->

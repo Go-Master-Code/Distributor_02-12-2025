@@ -8,6 +8,7 @@ import (
 
 type RepositoryPenjualan interface {
 	GetAllPenjualan() ([]model.Penjualan, error)
+	GetPenjualanPerPeriode(awal string, akhir string) ([]model.Penjualan, error)
 	GetPenjualanById(id int) (model.Penjualan, error)
 	CreatePenjualan(tx *gorm.DB, penjualan *model.Penjualan) error
 	CreatePenjualanDetail(tx *gorm.DB, detail *model.PenjualanDetail) error
@@ -25,6 +26,12 @@ func NewRepositoryPenjualan(db *gorm.DB) RepositoryPenjualan {
 func (r *repositoryPenjualan) GetAllPenjualan() ([]model.Penjualan, error) {
 	var penjualan []model.Penjualan
 	err := r.db.Preload("Sales").Preload("Toko").Preload("Items").Preload("Items.Barang").Find(&penjualan).Error
+	return penjualan, err
+}
+
+func (r *repositoryPenjualan) GetPenjualanPerPeriode(awal string, akhir string) ([]model.Penjualan, error) {
+	var penjualan []model.Penjualan
+	err := r.db.Preload("Sales").Preload("Toko").Preload("Toko.Kota").Preload("Items").Preload("Items.Barang").Where("tgl_penjualan BETWEEN ? AND ?", awal, akhir).Order("tgl_penjualan ASC, no_faktur ASC").Find(&penjualan).Error
 	return penjualan, err
 }
 

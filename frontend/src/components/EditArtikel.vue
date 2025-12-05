@@ -1,27 +1,26 @@
 <template>
-    <div class="container">
+    <div class="container-fluid">
         <form @submit.prevent="handleSubmit">
         
-        <div class="mb-3 row align-items-center">
-            <label for="id" class="col-sm-2 col-form-label">ID Artikel:</label>
-            <div class="col-sm-10">
-            <input id="id" v-model="form.id" type="text" class="form-control" disabled />
+            <div class="mb-3 row align-items-center">
+                <label for="id" class="col-sm-1 col-form-label">ID:</label>
+                <div class="col-sm-2">
+                    <input id="id" v-model="form.id" type="text" class="form-control" disabled />
+                </div>
+
+                <label for="nama" class="col-sm-1 col-form-label">Artikel:</label>
+                <div class="col-sm-8">
+                    <input id="nama" v-model="form.nama" type="text" class="form-control" autocomplete="off" autofocus required />
+                </div>
             </div>
-        </div>
 
-        <div class="row mb-3 align-items-center">
-            <label for="nama" class="col-sm-2 col-form-label">Nama Artikel:</label>
-            <div class="col-sm-10">
-                <input id="nama" v-model="form.nama" type="text" class="form-control" autocomplete="off" autofocus required />
-            </div>
-        </div>
+            <button type="submit" class="btn btn-primary" :disabled="loading">
+                Simpan Perubahan
+            </button>
 
-        <button type="submit" class="btn btn-primary" :disabled="loading">
-            Simpan Perubahan
-        </button>
+            <p v-if="error" class="text-danger mt-3">⚠️ {{ error }}</p>
+            <p v-if="success" class="text-success mt-3">✔️ Data berhasil diupdate!</p>
 
-        <p v-if="error" class="text-danger mt-3">⚠️ {{ error }}</p>
-        <p v-if="success" class="text-success mt-3">✔️ Data berhasil diupdate!</p>
         </form>
     </div>
 </template>
@@ -48,7 +47,7 @@
 
         try {
             const artikelID = route.params.id
-            const response = await fetch(`http://localhost:3000/api/artikel/${artikelID}`)
+            const response = await fetch(`http://localhost:3000/api/artikel?id=${artikelID}`)
             const data = await response.json()
 
             if (response.ok && data.code === 200) {

@@ -87,13 +87,6 @@
                                 <template v-else>▼</template>
                             </span>
                         </th>
-                        <th class="text-center" @click="sortBy('stok')">
-                            Stok
-                            <span v-if="sortKey === 'stok'">
-                                <template v-if="sortAsc">▲</template>
-                                <template v-else>▼</template>
-                            </span>
-                        </th>
                         <th class="text-center">
                             Action
                         </th>
@@ -109,7 +102,6 @@
                         <td class="text-center">{{ barang.kategori_barang_nama }}</td>
                         <td class="text-center">{{ barang.jenis_barang_nama }}</td>
                         <td class="text-center">{{ barang.ukuran_nama }}</td>
-                        <td class="text-center">{{ barang.stok }}</td>
                         <td class="text-center">
                             <button
                                 class="btn btn-sm btn-warning"
@@ -191,8 +183,7 @@
                 b.warna_nama.toLowerCase().includes(keyword) ||
                 b.kategori_barang_nama.toLowerCase().includes(keyword) ||
                 b.jenis_barang_nama.toLowerCase().includes(keyword) ||
-                b.ukuran_nama.toLowerCase().includes(keyword) ||
-                String(b.stok).includes(keyword) // <-- convert dulu angka ke string agar bisa di filter
+                b.ukuran_nama.toLowerCase().includes(keyword)
             )
         }
 

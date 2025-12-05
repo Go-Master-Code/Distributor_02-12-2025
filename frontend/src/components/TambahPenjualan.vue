@@ -6,7 +6,7 @@
                 <div class="col-sm-2">
                     <input id="no_faktur" v-model="form.no_faktur" type="text" class="form-control" autocomplete="off" maxlength="10" autofocus required />
                 </div>
-                <label for="tgl_penjualan" class="col-sm-2 col-form-label">Tanggal:</label>
+                <label for="tgl_penjualan" class="col-sm-2 col-form-label">Tanggal Faktur:</label>
                 <div class="col-sm-2">
                     <input id="tgl_penjualan" v-model="form.tgl_penjualan" type="date" class="form-control" autocomplete="off" required />
                 </div>
@@ -97,13 +97,13 @@
             <table class="table table-bordered align-middle">
                 <thead class="table-light">
                     <tr>
-                    <th style="width: 47%">Barang</th>
-                    <th style="width: 7%">Size</th>
-                    <th style="width: 7%">Stok</th>
+                    <th style="width: 46%">Barang</th>
+                    <th style="width: 8%">Size</th>
+                    <th style="width: 8%">Stok</th>
                     <th style="width: 7%">Qty</th>
-                    <th style="width: 10%">Harga</th>
-                    <th style="width: 12%">Total</th>
-                    <th style="width: 10%">Aksi</th>
+                    <th style="width: 11%">Harga</th>
+                    <th style="width: 11%">Total</th>
+                    <th style="width: 9%">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>

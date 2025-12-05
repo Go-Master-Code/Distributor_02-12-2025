@@ -5,17 +5,18 @@ import (
 	"api-distributor/internal/dto"
 	"api-distributor/internal/model"
 	"api-distributor/internal/repository"
+	"api-distributor/internal/utils/report/penjualan"
 	"errors"
 	"fmt"
 	"sort"
-	"strings"
 	"time"
 
 	"gorm.io/gorm"
 )
 
 type ServicePenjualan interface {
-	//GetAllPenjualan() ([]dto.PenjualanResponse, error)
+	GetAllPenjualan() ([]dto.PenjualanResponse, error)
+	GeneratePenjualanPerPeriode(awal string, akhir string) ([]byte, error)
 	CreatePenjualan(penjualan dto.CreatePenjualanRequest) (dto.PenjualanResponse, string, string, error)
 }
 
@@ -37,17 +38,46 @@ func NewServicePenjualan(db *gorm.DB, repo repository.RepositoryPenjualan, repoK
 	}
 }
 
-// func (s *servicePenjualan) GetAllPenjualan() ([]dto.PenjualanResponse, error) {
-// 	penjualan, err := s.repo.GetAllPenjualan()
-// 	if err != nil {
-// 		return []dto.PenjualanResponse{}, err
-// 	}
+func (s *servicePenjualan) GetAllPenjualan() ([]dto.PenjualanResponse, error) {
+	penjualan, err := s.repo.GetAllPenjualan()
+	if err != nil {
+		return []dto.PenjualanResponse{}, err
+	}
 
-// 	// convert model to dto
-// 	jualDTO := helper.ConvertToDTOPenjualanPlural(penjualan)
+	// convert model to dto
+	jualDTO := helper.ConvertToDTOPenjualanPlural(penjualan)
 
-// 	return jualDTO, nil
-// }
+	return jualDTO, nil
+}
+
+func (s *servicePenjualan) GeneratePenjualanPerPeriode(awal string, akhir string) ([]byte, error) {
+	// get master penjualan
+	jual, err := s.repo.GetPenjualanPerPeriode(awal, akhir)
+	if err != nil {
+		return nil, err
+	}
+
+	// convert model to dto
+	jualDTO := helper.ConvertToDTOPenjualanPlural(jual)
+
+	// ambil semua id penjualan
+	ids := make([]uint, len(jualDTO))
+	for i, j := range jualDTO {
+		ids[i] = uint(j.ID)
+	}
+
+	// get detil penjualan
+	detilJual, err := s.repoDetilJual.GetPenjualanDetailByFakturIds(ids)
+
+	if err != nil {
+		return nil, err
+	}
+
+	detilJualDTO := helper.ConvertToDTOPenjualanDetailPlural(detilJual)
+
+	// penjualan -> dari folder utils
+	return penjualan.GenerateReportPresensiAllPerPeriode(awal, akhir, jualDTO, detilJualDTO)
+}
 
 func (s *servicePenjualan) CreatePenjualan(req dto.CreatePenjualanRequest) (dto.PenjualanResponse, string, string, error) {
 	var response dto.PenjualanResponse // untuk tampung response akhir
@@ -218,9 +248,9 @@ func (s *servicePenjualan) CreatePenjualan(req dto.CreatePenjualanRequest) (dto.
 	detilJualDTO := helper.ConvertToDTOPenjualanDetailPlural(newDetilJual)
 
 	// debug (optional)
-	for _, detil := range detilJualDTO {
-		fmt.Println(detil)
-	}
+	// for _, detil := range detilJualDTO {
+	// 	fmt.Println(detil)
+	// }
 
 	// 1. Ambil semua size unik
 	sizeSet := map[int]bool{}
@@ -251,47 +281,49 @@ func (s *servicePenjualan) CreatePenjualan(req dto.CreatePenjualanRequest) (dto.
 		hargaMap[key] = d.Harga
 	}
 
-	fmt.Println("===============================================================================")
-	// 3. Print pivot table
-	fmt.Printf("%-7s %-13s %-10s", "Kode", "Artikel", "Warna")
-	for _, s := range sizes {
-		fmt.Printf("%5d", s)
-	}
+	//=======OUTPUT CONSOLE=======
+	// fmt.Println("===============================================================================")
+	// // 3. Print pivot table
+	// fmt.Printf("%-7s %-13s %-10s", "Kode", "Artikel", "Warna")
+	// for _, s := range sizes {
+	// 	fmt.Printf("%5d", s)
+	// }
 
-	// header kolom total
-	fmt.Printf("%5s", "Qty")
+	// // header kolom total
+	// fmt.Printf("%5s", "Qty")
 
-	// header kolom harga
-	fmt.Printf("%8s", "Harga")
+	// // header kolom harga
+	// fmt.Printf("%8s", "Harga")
 
-	// header kolom total
-	fmt.Printf("%9s", "Total")
+	// // header kolom total
+	// fmt.Printf("%9s", "Total")
 
-	fmt.Println("\n===============================================================================")
+	// fmt.Println("\n===============================================================================")
 
-	for key, row := range pivot {
-		fmt.Printf("%-20s", key)
-		// initial value total per row
-		total := 0
+	// for key, row := range pivot {
+	// 	fmt.Printf("%-20s", key)
+	// 	// initial value total per row
+	// 	total := 0
 
-		for _, s := range sizes {
-			val := row[s]
-			if val == 0 {
-				fmt.Printf("%5s", " ") // kosong jika 0
-			} else {
-				fmt.Printf("%5d", val) // qty sebenarnya
-				total += val
-			}
-		}
-		// tampilkan total di kolom terakhir
-		fmt.Printf("%5d", total)
-		fmt.Printf("%8d", hargaMap[key])       // harga dari dto
-		fmt.Printf("%9d", total*hargaMap[key]) // hitung total harga * qty
+	// 	for _, s := range sizes {
+	// 		val := row[s]
+	// 		if val == 0 {
+	// 			fmt.Printf("%5s", " ") // kosong jika 0
+	// 		} else {
+	// 			fmt.Printf("%5d", val) // qty sebenarnya
+	// 			total += val
+	// 		}
+	// 	}
+	// 	// tampilkan total di kolom terakhir
+	// 	fmt.Printf("%5d", total)
+	// 	fmt.Printf("%8d", hargaMap[key])       // harga dari dto
+	// 	fmt.Printf("%9d", total*hargaMap[key]) // hitung total harga * qty
 
-		fmt.Println()
-	}
-	fmt.Println("===============================================================================")
+	// 	fmt.Println()
+	// }
+	// fmt.Println("===============================================================================")
 
+	// OUTPUT FAKTUR FILE .TXT
 	kategoriSizeRange := map[string][]int{
 		"K": {26, 27, 28, 29, 30, 31},
 		"A": {32, 33, 34, 35, 36, 37},
@@ -304,10 +336,18 @@ func (s *servicePenjualan) CreatePenjualan(req dto.CreatePenjualanRequest) (dto.
 
 	pivotMultiHeader := helper.BuildPivot(detilJualDTO, kategoriSizeRange)
 
+	// ambil data brand dari slice detil jual pertama
+	merk := detilJualDTO[0].BarangMerk
+
+	totalQty := 0
+	for _, d := range detilJualDTO {
+		totalQty += d.Qty
+	}
+
 	// ==== Generate text faktur ====
-	content := helper.PrintHeader(response, kategoriSizeRange, kategoriLabel, totalSizes)
+	content := helper.PrintHeader(merk, response, kategoriSizeRange, kategoriLabel, totalSizes)
 	content += helper.PrintData(pivotMultiHeader, kategoriSizeRange)
-	content += helper.PrintSumarry(response)
+	content += helper.PrintSumarry(response, totalQty)
 
 	// =======BUAT FILE FAKTUR.TXT=======
 	// err = helper.WriteToFile("fakturMultiHeader.txt", output)
@@ -326,74 +366,74 @@ func (s *servicePenjualan) CreatePenjualan(req dto.CreatePenjualanRequest) (dto.
 }
 
 // helper function untuk cetak faktur
-func (s *servicePenjualan) generateInvoiceText(penjualan model.Penjualan) string {
-	var sb strings.Builder
-	total := 0
+// func (s *servicePenjualan) generateInvoiceText(penjualan model.Penjualan) string {
+// 	var sb strings.Builder
+// 	total := 0
 
-	sb.WriteString(strings.Repeat("=", 80) + "\n")
-	sb.WriteString(fmt.Sprintf("MITRA SUKSES BERSAMA%10sNama Toko: %s\n", "", penjualan.Toko.Nama))
-	sb.WriteString(fmt.Sprintf("FAKTUR PENJUALAN%13s %s (%s)\n", "", penjualan.Toko.Alamat, penjualan.Toko.Kota.Nama))
-	sb.WriteString(fmt.Sprintf("No.Faktur: %-10s         Tanggal Faktur: %s\n",
-		penjualan.NoFaktur,
-		penjualan.TglPenjualan.Format("02-01-2006")))
-	sb.WriteString(fmt.Sprintf("%30sJatuh Tempo: %s\n", "", penjualan.TglJatuhTempo.Format("02-01-2006")))
-	sb.WriteString(strings.Repeat("=", 80) + "\n")
-	sb.WriteString("| ID / Artikel              | Warna        | Size | Harga    | Qty | Subtotal  |\n")
-	sb.WriteString(strings.Repeat("-", 80) + "\n")
+// 	sb.WriteString(strings.Repeat("=", 80) + "\n")
+// 	sb.WriteString(fmt.Sprintf("MITRA SUKSES BERSAMA%10sNama Toko: %s\n", "", penjualan.Toko.Nama))
+// 	sb.WriteString(fmt.Sprintf("FAKTUR PENJUALAN%13s %s (%s)\n", "", penjualan.Toko.Alamat, penjualan.Toko.Kota.Nama))
+// 	sb.WriteString(fmt.Sprintf("No.Faktur: %-10s         Tanggal Faktur: %s\n",
+// 		penjualan.NoFaktur,
+// 		penjualan.TglPenjualan.Format("02-01-2006")))
+// 	sb.WriteString(fmt.Sprintf("%30sJatuh Tempo: %s\n", "", penjualan.TglJatuhTempo.Format("02-01-2006")))
+// 	sb.WriteString(strings.Repeat("=", 80) + "\n")
+// 	sb.WriteString("| ID / Artikel              | Warna        | Size | Harga    | Qty | Subtotal  |\n")
+// 	sb.WriteString(strings.Repeat("-", 80) + "\n")
 
-	//ambil data detil penjualan berdasarkan nomor faktur
-	newDetilJual, err := s.repoDetilJual.GetPenjualanDetailById(penjualan.ID)
-	// fmt.Println(newDetilJual)
-	if err != nil {
-		panic(err)
-	}
+// 	//ambil data detil penjualan berdasarkan nomor faktur
+// 	newDetilJual, err := s.repoDetilJual.GetPenjualanDetailById(penjualan.ID)
+// 	// fmt.Println(newDetilJual)
+// 	if err != nil {
+// 		panic(err)
+// 	}
 
-	detilJualDTO := helper.ConvertToDTOPenjualanDetailPlural(newDetilJual)
-	// fmt.Println(detilJualDTO)
+// 	detilJualDTO := helper.ConvertToDTOPenjualanDetailPlural(newDetilJual)
+// 	// fmt.Println(detilJualDTO)
 
-	for _, item := range detilJualDTO {
-		sub := item.Qty * item.Harga
-		total += sub
-		sb.WriteString(fmt.Sprintf("| %-5s/%-18s | %-12s | %4d | %8d | %3d | %9d |\n",
-			item.BarangKode, item.BarangArtikel, item.BarangWarna, item.Size, item.Harga, item.Qty, item.Subtotal))
-	}
+// 	for _, item := range detilJualDTO {
+// 		sub := item.Qty * item.Harga
+// 		total += sub
+// 		sb.WriteString(fmt.Sprintf("| %-5s/%-18s | %-12s | %4d | %8d | %3d | %9d |\n",
+// 			item.BarangKode, item.BarangArtikel, item.BarangWarna, item.Size, item.Harga, item.Qty, item.Subtotal))
+// 	}
 
-	// perhitungan diskon 1,2, dan 3
-	var grandTotal float64
-	grandTotal = float64(total)
-	fmt.Println("Total bruto:", grandTotal)
-	diskon1 := penjualan.Toko.Disc1 * grandTotal
-	fmt.Println("Diskon 1:", diskon1)
-	grandTotal -= diskon1
-	fmt.Println("Grand total after diskon 1:", grandTotal)
-	diskon2 := penjualan.Toko.Disc2 * grandTotal
-	fmt.Println("Diskon 2:", diskon2)
-	grandTotal -= diskon2
-	fmt.Println("Grand total after diskon 2:", grandTotal)
-	diskon3 := penjualan.Toko.Disc3 * grandTotal
-	fmt.Println("Diskon 3:", diskon3)
-	grandTotal -= diskon3
-	fmt.Println("Grand total after diskon 3:", grandTotal)
-	//grandTotal = grandTotal - diskon3
-	sb.WriteString(strings.Repeat("-", 80) + "\n")
-	sb.WriteString(fmt.Sprintf("| %64s | %9d |\n", "Total", total))
+// 	// perhitungan diskon 1,2, dan 3
+// 	var grandTotal float64
+// 	grandTotal = float64(total)
+// 	fmt.Println("Total bruto:", grandTotal)
+// 	diskon1 := penjualan.Toko.Disc1 * grandTotal
+// 	fmt.Println("Diskon 1:", diskon1)
+// 	grandTotal -= diskon1
+// 	fmt.Println("Grand total after diskon 1:", grandTotal)
+// 	diskon2 := penjualan.Toko.Disc2 * grandTotal
+// 	fmt.Println("Diskon 2:", diskon2)
+// 	grandTotal -= diskon2
+// 	fmt.Println("Grand total after diskon 2:", grandTotal)
+// 	diskon3 := penjualan.Toko.Disc3 * grandTotal
+// 	fmt.Println("Diskon 3:", diskon3)
+// 	grandTotal -= diskon3
+// 	fmt.Println("Grand total after diskon 3:", grandTotal)
+// 	//grandTotal = grandTotal - diskon3
+// 	sb.WriteString(strings.Repeat("-", 80) + "\n")
+// 	sb.WriteString(fmt.Sprintf("| %64s | %9d |\n", "Total", total))
 
-	sb.WriteString(fmt.Sprintf("| %64s | %9.0f |\n", "Disc 1", diskon1)) // %9.0F ARTINYA pembualan ke bilangan bulat tanpa desimal
-	sb.WriteString(fmt.Sprintf("| %64s | %9.0f |\n", "Disc 2", diskon2))
-	sb.WriteString(fmt.Sprintf("| %64s | %9.0f |\n", "Disc 3", diskon3))
+// 	sb.WriteString(fmt.Sprintf("| %64s | %9.0f |\n", "Disc 1", diskon1)) // %9.0F ARTINYA pembualan ke bilangan bulat tanpa desimal
+// 	sb.WriteString(fmt.Sprintf("| %64s | %9.0f |\n", "Disc 2", diskon2))
+// 	sb.WriteString(fmt.Sprintf("| %64s | %9.0f |\n", "Disc 3", diskon3))
 
-	sb.WriteString(fmt.Sprintf("| %64s | %9d |\n", "Grand Total", penjualan.TotalNetto))
-	sb.WriteString(strings.Repeat("=", 80) + "\n")
-	sb.WriteString(centerText("TERIMA KASIH ATAS PEMBELIAN ANDA", 80) + "\n")
-	sb.WriteString(strings.Repeat("=", 80) + "\n")
+// 	sb.WriteString(fmt.Sprintf("| %64s | %9d |\n", "Grand Total", penjualan.TotalNetto))
+// 	sb.WriteString(strings.Repeat("=", 80) + "\n")
+// 	sb.WriteString(centerText("TERIMA KASIH ATAS PEMBELIAN ANDA", 80) + "\n")
+// 	sb.WriteString(strings.Repeat("=", 80) + "\n")
 
-	return sb.String()
-}
+// 	return sb.String()
+// }
 
-func centerText(text string, width int) string {
-	padding := (width - len(text)) / 2
-	if padding < 0 {
-		padding = 0
-	}
-	return strings.Repeat(" ", padding) + text
-}
+// func centerText(text string, width int) string {
+// 	padding := (width - len(text)) / 2
+// 	if padding < 0 {
+// 		padding = 0
+// 	}
+// 	return strings.Repeat(" ", padding) + text
+// }

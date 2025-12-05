@@ -1,8 +1,9 @@
 ──────────────────────────────────────────────────────────────────────────────────────────
-MITRA SUKSES BERSAMA          Nama Toko: Toko Jual
-FAKTUR PENJUALAN               ()
-No.Faktur: CONTOH             Tanggal Faktur: 2025-12-02
-Sales ID: 1                   Jatuh Tempo: 2025-12-02
+MITRA SUKSES BERSAMA          Kepada: Toko Jual
+FAKTUR PENJUALAN                           
+No.Faktur: CONTOH             Kota: 
+Sales ID: 1                   Tanggal Faktur: 2025-12-05
+Brand: DESLE                  Jatuh Tempo: 2025-12-05
 ──────────────────────────────────────────────────────────────────────────────────────────
 Kode    Artikel   Warna       |K| 26 27 28 29 30 31                                                                                                             
                               |A| 32 33 34 35 36 37 
@@ -14,11 +15,16 @@ CAV002  LEMBATA   HTM/PUTIH    D                    42                 42  14000
 ──────────────────────────────────────────────────────────────────────────────────────────
 CAV004  LEMBATA   BIRU MD      A           35                          35  139000  4865000
 ──────────────────────────────────────────────────────────────────────────────────────────
-                                                                            Total  1000000
-                                                                   Disc 1 (  30%)   300000
+                                                                Total  18          1000000
+                                                                ──────────────────────────
+Dibuat oleh:                  Penerima:                            Disc 1 (  30%)   300000
                                                                    Disc 2 (  15%)   105000
                                                                    Disc 3 (   0%)        0
-                                                                      Grand Total        0
-──────────────────────────────────────────────────────────────────────────────────────────
-                                  TERIMA KASIH ATAS PEMBELIAN ANDA
-──────────────────────────────────────────────────────────────────────────────────────────
+                                                                ──────────────────────────
+────────────                  ────────────                            Grand Total        0
+                              Nama,Ttd,Stempel          
+NB: Apabila ada kekeliruan maksimal pemberitahuan               ────────────────────────── 
+    10 hari setelah tanggal terima barang.                     | Transfer ke: TAHAPAN BCA | 
+                                                               |    No Rek: 5105713999    |
+                                                               | A/N FIKA M ATAU FRENDY H |
+                                                                ──────────────────────────

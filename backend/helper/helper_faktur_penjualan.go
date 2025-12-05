@@ -113,7 +113,7 @@ func AutoConvertSize(kat string, size int) []SizeMapping {
 }
 
 // ======================= PRINT HEADER =======================
-func PrintHeader(jual dto.PenjualanResponse, kategoriSizeRange map[string][]int, kategoriLabel map[string]string, totalSizes int) string {
+func PrintHeader(merk string, jual dto.PenjualanResponse, kategoriSizeRange map[string][]int, kategoriLabel map[string]string, totalSizes int) string {
 	var b strings.Builder
 
 	// parsing tanggal jual dan jatuh tempo dari sting ke date
@@ -128,12 +128,11 @@ func PrintHeader(jual dto.PenjualanResponse, kategoriSizeRange map[string][]int,
 	}
 
 	b.WriteString(strings.Repeat("─", 90) + "\n")
-	b.WriteString(fmt.Sprintf("MITRA SUKSES BERSAMA%10sNama Toko: %s\n", "", jual.TokoNama))
-	b.WriteString(fmt.Sprintf("FAKTUR PENJUALAN%13s %s (%s)\n", "", jual.TokoAlamat, jual.TokoKota))
-	b.WriteString(fmt.Sprintf("No.Faktur: %-10s         Tanggal Faktur: %s\n",
-		jual.NoFaktur,
-		tglPenjualan.Format("2006-01-02")))
-	b.WriteString(fmt.Sprintf("Sales ID: %1d %18sJatuh Tempo: %s\n", jual.SalesID, " ", tglJatuhTempo.Format("2006-01-02")))
+	b.WriteString(fmt.Sprintf("MITRA SUKSES BERSAMA%10sKepada: %s\n", "", jual.TokoNama))
+	b.WriteString(fmt.Sprintf("FAKTUR PENJUALAN %12s %13s\n", "", jual.TokoAlamat))
+	b.WriteString(fmt.Sprintf("No.Faktur: %-19sKota: %s\n", jual.NoFaktur, jual.TokoKota))
+	b.WriteString(fmt.Sprintf("Sales ID: %1d %18sTanggal Faktur: %s\n", jual.SalesID, " ", tglPenjualan.Format("2006-01-02")))
+	b.WriteString(fmt.Sprintf("Brand: %-22s Jatuh Tempo: %s\n", merk, tglJatuhTempo.Format("2006-01-02")))
 
 	b.WriteString(strings.Repeat("─", 90) + "\n")
 	fmt.Fprintf(&b, "%-8s", "Kode")
@@ -217,33 +216,8 @@ func PrintData(pivot map[string]*PivotRow, kategoriSizeRange map[string][]int) s
 }
 
 // ======================= PRINT SUMMARY =======================
-func PrintSumarry(response dto.PenjualanResponse) string {
+func PrintSumarry(response dto.PenjualanResponse, totalQty int) string {
 	var b strings.Builder
-
-	// dummy data penjualan
-	// penjualan := model.Penjualan{
-	// 	ID:            111,
-	// 	NoFaktur:      "JT-001",
-	// 	TglPenjualan:  time.Now(),
-	// 	TglJatuhTempo: time.Now(),
-	// 	TokoID:        1,
-	// 	Toko: model.Toko{
-	// 		Nama:   "AGRIS SPORT",
-	// 		Alamat: "JL. KH Zainal Alim No. 31. Kemayoran.",
-	// 		KotaID: 66,
-	// 		Kota: model.Kota{
-	// 			Nama: "BANGKALAN",
-	// 		},
-	// 		Disc1: 0.3,
-	// 		Disc2: 0,
-	// 		Disc3: 0,
-	// 	},
-	// 	Total:      2500000,
-	// 	TotalNetto: 2644740,
-	// 	CreatedAt:  time.Now(),
-	// }
-
-	// total := 3778200
 
 	// perhitungan diskon 1,2, dan 3
 	var grandTotal float64
@@ -264,27 +238,28 @@ func PrintSumarry(response dto.PenjualanResponse) string {
 	// fmt.Println("Grand total after diskon 3:", grandTotal)
 
 	//grandTotal = grandTotal - diskon3
-	b.WriteString(fmt.Sprintf("%81s %8d\n", "Total", response.Total))
+	b.WriteString(fmt.Sprintf("%70s %d %16d\n", "Total ", totalQty, response.Total))
 
-	b.WriteString(fmt.Sprintf("%73s (%4.0f%%) %8.0f\n", "Disc 1", response.Disc1*100, diskon1)) // %9.0F ARTINYA pembualan ke bilangan bulat tanpa desimal
+	b.WriteString(fmt.Sprintf("%63s %-26s\n", "", "──────────────────────────"))
+
+	b.WriteString(fmt.Sprintf("%12s %16s %-19s %23s (%4.0f%%) %8.0f\n", "Dibuat oleh:", "", "Penerima:", "Disc 1", response.Disc1*100, diskon1)) // %9.0F ARTINYA pembualan ke bilangan bulat tanpa desimal
 	b.WriteString(fmt.Sprintf("%73s (%4.0f%%) %8.0f\n", "Disc 2", response.Disc2*100, diskon2))
 	b.WriteString(fmt.Sprintf("%73s (%4.0f%%) %8.0f\n", "Disc 3", response.Disc3*100, diskon3))
 
-	b.WriteString(fmt.Sprintf("%81s %8d\n", "Grand Total", response.TotalNetto))
-	b.WriteString(strings.Repeat("─", 90) + "\n")
-	b.WriteString(centerText("TERIMA KASIH ATAS PEMBELIAN ANDA", 88) + "\n")
-	b.WriteString(strings.Repeat("─", 90) + "\n")
+	b.WriteString(fmt.Sprintf("%63s %-26s\n", "", "──────────────────────────"))
+
+	b.WriteString(fmt.Sprintf("%12s %12s %16s  %37s %8d\n", "────────────", "", "────────────", "Grand Total", response.TotalNetto))
+
+	b.WriteString(fmt.Sprintf("%29s %-26s\n", "", "Nama,Ttd,Stempel"))
+
+	b.WriteString(fmt.Sprintf("%-49s %13s %26s \n", "NB: Apabila ada kekeliruan maksimal pemberitahuan", "", "──────────────────────────"))
+	b.WriteString(fmt.Sprintf("%-3s %-58s %-29s\n", "", "10 hari setelah tanggal terima barang.", "| Transfer ke: TAHAPAN BCA |"))
+
+	b.WriteString(fmt.Sprintf("%-62s %13s\n", "", "|    No Rek: 5105713999    |"))
+	b.WriteString(fmt.Sprintf("%-62s %13s\n", "", "| A/N FIKA M ATAU FRENDY H |"))
+	b.WriteString(fmt.Sprintf("%-63s %-26s\n", "", "──────────────────────────"))
 
 	return b.String()
-}
-
-// agar text terima kasih berada di tengah
-func centerText(text string, width int) string {
-	padding := (width - len(text)) / 2
-	if padding < 0 {
-		padding = 0
-	}
-	return strings.Repeat(" ", padding) + text
 }
 
 // ======================= WRITE FILE =======================

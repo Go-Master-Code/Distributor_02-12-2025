@@ -345,11 +345,12 @@ func ConvertToDTOPenjualanPlural(penjualan []model.Penjualan) []dto.PenjualanRes
 
 func ConvertToDTOPenjualanDetailSingle(dj model.PenjualanDetail) dto.PenjualanDetailResponse {
 	var djDTO dto.PenjualanDetailResponse
-	// djDTO.ID = dj.ID
+	djDTO.ID = dj.ID
 	// djDTO.PenjualanID = dj.PenjualanID
 	djDTO.BarangID = dj.BarangID
 	djDTO.BarangArtikel = dj.Barang.Artikel.Nama
 	djDTO.BarangWarna = dj.Barang.Warna.Nama
+	djDTO.BarangMerk = dj.Barang.Merk.Nama
 	djDTO.BarangUkuran = dj.Barang.Ukuran.Nama
 	djDTO.BarangKategori = dj.Barang.KategoriBarang.Huruf
 	djDTO.Size = dj.Size
@@ -363,12 +364,13 @@ func ConvertToDTOPenjualanDetailPlural(dj []model.PenjualanDetail) []dto.Penjual
 	var djDTO []dto.PenjualanDetailResponse
 	for _, data := range dj {
 		djDTO = append(djDTO, dto.PenjualanDetailResponse{
-			// ID:          data.ID,
-			// PenjualanID: data.PenjualanID,
+			ID:             data.ID,
+			PenjualanID:    data.PenjualanID,
 			BarangID:       data.BarangID,
 			BarangKode:     data.Barang.Kode,
 			BarangArtikel:  data.Barang.Artikel.Nama,
 			BarangWarna:    data.Barang.Warna.Nama,
+			BarangMerk:     data.Barang.Merk.Nama,
 			BarangUkuran:   data.Barang.Ukuran.Nama,
 			BarangKategori: data.Barang.KategoriBarang.Huruf,
 			Size:           data.Size,

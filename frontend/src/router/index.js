@@ -11,6 +11,7 @@ import TokoView from '../views/TokoView.vue'
 import KartuStokList from '../views/KartuStokList.vue'
 import KartuStokView from '../views/KartuStokView.vue'
 import PenjualanView from '../views/PenjualanView.vue'
+import LaporanPenjualanView from '../views/LaporanPenjualanView.vue'
 import ViewEditSupplier from '../views/ViewEditSupplier.vue'
 import ViewEditArtikel from '../views/ViewEditArtikel.vue'
 import ViewEditBarang from '../views/ViewEditBarang.vue'
@@ -35,6 +36,8 @@ const routes = [
     { path: '/toko/edit/:id', name: 'EditToko', component: ViewEditToko}, // edit toko
 
     { path: '/penjualan', name: 'Penjualan', component: PenjualanView}, // tambah penjualan
+
+    { path: '/laporan_penjualan', name: 'LaporanPenjualan', component: LaporanPenjualanView}, // UI laporan penjualan
 
     { path: '/kartu_stok', name: 'KartuStok', component: KartuStokList}, // path yang akan diakses ketika running web
     { path: '/kartu_stok/tambah', name: 'TambahKartuStok', component: KartuStokView}, // tambah stok spesifik

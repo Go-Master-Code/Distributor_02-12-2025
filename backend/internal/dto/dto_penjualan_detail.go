@@ -10,13 +10,13 @@ type CreatePenjualanDetailRequest struct {
 }
 
 type PenjualanDetailResponse struct {
-	// ID          int             `json:"id"`
-	// PenjualanID int             `json:"penjualan_id"`
-	// kedua atribut di atas dimatikan karena ID digenerate otomatis dan PenjualanID baru ada setelah data master penjualan dibuat
+	ID             int             `json:"id"`
+	PenjualanID    int             `json:"penjualan_id"`
 	BarangID       int             `json:"barang_id"`
 	BarangKode     string          `json:"barang_kode"`
 	BarangArtikel  string          `json:"barang_artikel"`
 	BarangWarna    string          `json:"barang_warna"`
+	BarangMerk     string          `json:"barang_merk"`
 	BarangUkuran   string          `json:"barang_ukuran"` // ukuran yang ada di tabel barang (38-43) misalnya
 	BarangKategori string          `json:"barang_kategori"`
 	Size           int             `json:"size"`

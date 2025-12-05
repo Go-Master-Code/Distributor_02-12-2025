@@ -173,7 +173,8 @@ func main() {
 	servicePenjualan := service.NewServicePenjualan(database.DB, repoPenjualan, repoKartuStok, repoBarang, repoDetilJual) // SEKALIAN UPDATE BARANG
 	handlerPenjualan := handler.NewHandlerPenjualan(servicePenjualan)
 
-	//r.GET("/api/penjualan", handlerPenjualan.GetAllPenjualan)
+	r.GET("/api/penjualan", handlerPenjualan.GetAllPenjualan)
+	r.GET("/report/penjualan", handlerPenjualan.GenerateLaporanPenjualan) // khusus langsung generate report
 	r.POST("/api/penjualan", handlerPenjualan.CreatePenjualan)
 
 	// handler untuk frontend

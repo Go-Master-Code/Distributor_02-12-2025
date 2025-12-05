@@ -17,15 +17,15 @@ func NewHandlerPenjualan(service service.ServicePenjualan) *handlerPenjualan {
 	return &handlerPenjualan{service}
 }
 
-// func (h *handlerPenjualan) GetAllPenjualan(c *gin.Context) {
-// 	penjualan, err := h.service.GetAllPenjualan()
-// 	if err != nil {
-// 		helper.ErrorDataNotFound(c)
-// 		return
-// 	}
+func (h *handlerPenjualan) GetAllPenjualan(c *gin.Context) {
+	penjualan, err := h.service.GetAllPenjualan()
+	if err != nil {
+		helper.ErrorDataNotFound(c)
+		return
+	}
 
-// 	helper.StatusSuksesGetData(c, penjualan)
-// }
+	helper.StatusSuksesGetData(c, penjualan)
+}
 
 func (h *handlerPenjualan) CreatePenjualan(c *gin.Context) {
 	// parsing json body
@@ -58,4 +58,21 @@ func (h *handlerPenjualan) CreatePenjualan(c *gin.Context) {
 
 	// response API
 	// helper.StatusSuksesCreateData(c, newPenjualan)
+}
+
+func (h *handlerPenjualan) GenerateLaporanPenjualan(c *gin.Context) {
+	// ambil query param
+	awal := c.Query("awal")
+	akhir := c.Query("akhir")
+
+	pdfBytes, err := h.service.GeneratePenjualanPerPeriode(awal, akhir)
+
+	if err != nil {
+		helper.ErrorDataNotFound(c)
+		return
+	}
+
+	c.Header("Content-Type", "application/pdf")
+	c.Header("Content-Disposition", "inline; filename=laporan_penjualan.pdf")
+	c.Data(200, "application/pdf", pdfBytes)
 }
