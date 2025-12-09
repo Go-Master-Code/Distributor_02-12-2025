@@ -98,3 +98,31 @@ func (h *handlerToko) CreateToko(c *gin.Context) {
 
 	helper.StatusSuksesCreateData(c, newToko)
 }
+
+func (h *handlerToko) UpdateToko(c *gin.Context) {
+	// tangkap dulu data json untuk update
+	var req dto.UpdateTokoRequest
+
+	err := c.ShouldBindJSON(&req)
+	if err != nil {
+		helper.ErrorParsingRequestBody(c, err)
+		return
+	}
+
+	// ambil param id
+	id := c.Param("id")
+	idInt, err := strconv.Atoi(id)
+	if err != nil {
+		helper.ErrorParsingAtoi(c, err)
+		return
+	}
+
+	tokoDTO, err := h.service.UpdateToko(idInt, req)
+
+	if err != nil {
+		helper.ErrorUpdateData(c, err)
+		return
+	}
+
+	helper.StatusSuksesUpdateData(c, tokoDTO)
+}

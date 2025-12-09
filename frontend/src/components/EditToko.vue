@@ -3,20 +3,16 @@
         <form @submit.prevent="handleSubmit">
         
             <div class="row mb-3 align-items-center">
-                <label for="id" class="col-sm-2 col-form-label">ID Toko:</label>
+                <label for="id" class="col-sm-1 col-form-label">ID:</label>
                 <div class="col-sm-2">
                     <input id="id" v-model="form.id" type="text" class="form-control" autocomplete="off" disabled required />
                 </div>
-                
-            </div>
-
-            <div class="row mb-3 align-items-center">
-                <label for="kode" class="col-sm-2 col-form-label">Kode Toko:</label>
-                <div class="col-sm-4">
+                <label for="kode" class="col-sm-1 col-form-label">Kode:</label>
+                <div class="col-sm-2">
                     <input id="kode" v-model="form.kode" type="text" class="form-control" autocomplete="off" autofocus required />
                 </div>
-                <label for="nama" class="col-sm-2 col-form-label">Nama Toko:</label>
-                <div class="col-sm-4">
+                <label for="nama" class="col-sm-1 col-form-label">Nama:</label>
+                <div class="col-sm-5">
                     <input id="nama" v-model="form.nama" type="text" class="form-control" autocomplete="off" required />
                 </div>
             </div>
@@ -24,7 +20,7 @@
             <!-- Multiselect kategori toko -->
             <div class="row mb-3 align-items-center">
                 <!-- nama label harus sesuai dengan response api json (nama) -->
-                <label for="kota" class="col-sm-2 col-form-label">Kota:</label> 
+                <label for="kota" class="col-sm-1 col-form-label">Kota:</label> 
                 <div class="col-sm-4"> 
                     <Multiselect
                         ref="kotaRef"
@@ -49,7 +45,7 @@
                 </div> 
 
                 <!-- nama label harus sesuai dengan response api json (nama) -->
-                <label for="kategori" class="col-sm-2 col-form-label">Kategori:</label> 
+                <label for="kategori" class="col-sm-1 col-form-label">Kategori:</label> 
                 <div class="col-sm-4"> 
                     <Multiselect
                         ref="kategoriRef"
@@ -75,22 +71,47 @@
             </div>
 
             <div class="row mb-3 align-items-center">
-                <label for="nama" class="col-sm-2 col-form-label">Alamat:</label>
-                <div class="col-sm-10">
+                <label for="nama" class="col-sm-1 col-form-label">Alamat:</label>
+                <div class="col-sm-6">
                     <input id="alamat" v-model="form.alamat" type="text" class="form-control" autocomplete="off" required />
+                </div>
+
+                <!-- nama label harus sesuai dengan response api json -->
+                <label for="area" class="col-sm-1 col-form-label">Area:</label> 
+                <div class="col-sm-4"> 
+                    <Multiselect
+                        ref="areaRef"
+                        id="area"
+                        v-model="selectedArea"
+                        mode="single"
+                        :options="areaList"
+                        :searchable="true"
+                        :filter-results="false"
+                        :clear-on-select="true"
+                        :close-on-select="true"
+                        :internal-search="false"
+                        :loading="loading"
+                        autocomplete="off"
+                        placeholder="Ketik untuk mencari area..."
+                        label="nama"
+                        value-prop="id"
+                        track-by="id"
+                        @search-change="onSearchArea"
+                        @select="onSelectArea"
+                    />
                 </div>
             </div>
 
             <div class="row mb-3 align-items-center">
-                <label for="disc_1" class="col-sm-2 col-form-label">Disc 1 (%):</label>
+                <label for="disc_1" class="col-sm-1 col-form-label">Disc 1 %:</label>
                 <div class="col-sm-2">
                     <input id="disc_1" v-model.number="form.disc_1" type="number" class="form-control" autocomplete="off" required />
                 </div>
-                <label for="disc_2" class="col-sm-2 col-form-label">Disc 2 (%):</label>
+                <label for="disc_2" class="col-sm-1 col-form-label">Disc 2 %:</label>
                 <div class="col-sm-2">
                     <input id="disc_2" v-model.number="form.disc_2" type="number" class="form-control" autocomplete="off" required />
                 </div>
-                <label for="disc_3" class="col-sm-2 col-form-label">Disc 3 (%):</label>
+                <label for="disc_3" class="col-sm-1 col-form-label">Disc 3 %:</label>
                 <div class="col-sm-2">
                     <input id="disc_3" v-model.number="form.disc_3" type="number" class="form-control" autocomplete="off" required />
                 </div>
@@ -99,7 +120,7 @@
             <!-- Multiselect ekspedisi -->
             <div class="row mb-3 align-items-center">
                 <!-- nama label harus sesuai dengan response api json (nama) -->
-                <label for="ekspedisi" class="col-sm-2 col-form-label">Ekspedisi:</label> 
+                <label for="ekspedisi" class="col-sm-1 col-form-label">Ekspedisi:</label> 
                 <div class="col-sm-4"> 
                     <Multiselect
                         ref="ekspedisiRef"
@@ -124,7 +145,7 @@
                 </div>
                 
                 <!-- nama label harus sesuai dengan response api json (nama) -->
-                <label for="ongkir" class="col-sm-2 col-form-label">Ongkir:</label> 
+                <label for="ongkir" class="col-sm-1 col-form-label">Ongkir:</label> 
                 <div class="col-sm-4"> 
                     <Multiselect
                         ref="ongkirRef"
@@ -179,6 +200,7 @@
         nama: '',
         kategori_toko_id: null,
         kota_id: null,
+        area_id: null,
         alamat: '',
         disc_1: '',
         disc_2: '',
@@ -190,12 +212,14 @@
     // State untuk multiselect
     const selectedKategori = ref(null)
     const selectedKota = ref(null)
+    const selectedArea = ref(null)
     const selectedEkspedisi = ref(null)
     const selectedOngkir = ref(null)
 
     // ambil dulu semua merkList dari API
     const kategoriList = ref([])
     const kotaList = ref([])
+    const areaList = ref([])
     const ekspedisiList = ref([])
     const ongkirList = ref([])
 
@@ -208,6 +232,11 @@
     const onSelectKota = (option) => {
         selectedKota.value = option
         console.log('Kota dipilih:', option)
+    }
+
+    const onSelectArea = (option) => {
+        selectedArea.value = option
+        console.log('Area dipilih:', option)
     }
 
     const onSelectEkspedisi = (option) => {
@@ -242,6 +271,17 @@
         console.log('Kota:', kota.id)
         selectedKota.value = kota.id
         console.log('Set selected kota:', kota.id)
+    }
+
+    function setSelectedAreaById(areaId) {
+        if (!areaId) {
+            selectedArea.value = null
+            return
+        }
+        const area = areaList.value.find(a => a.id === areaId) || null
+        console.log('Area:', area.id)
+        selectedArea.value = area.id
+        console.log('Set selected area:', area.id)
     }
 
     function setSelectedEkspedisiById(ekspedisiId) {
@@ -344,6 +384,37 @@
         }, 400) // delay agar tidak spam API
     }
 
+    // ===== FUNGSI CARI AREA (DEBOUNCE) =====
+    const onSearchArea = (query) => {
+        clearTimeout(searchTimeout)
+        searchTimeout = setTimeout(async () => {
+            // Kalau query kosong, biarkan list terakhir atau kosongkan (opsional)
+            if (!query || query.trim().length < 1) {
+                areaList.value = []
+                return
+            }
+
+            loading.value = true
+            try {
+                const res = await axios.get(`/api/area?nama=${encodeURIComponent(query)}`)
+                const data = res.data.data
+
+                // Pastikan hasil dari API adalah array
+                if (Array.isArray(data)) {
+                    areaList.value = data
+                    console.log('Area hasil pencarian:', data)
+                } else {
+                    areaList.value = []
+                }
+            } catch (err) {
+                console.error('Gagal load area:', err)
+                areaList.value = []
+            } finally {
+                loading.value = false
+            }
+        }, 400) // delay agar tidak spam API
+    }
+
     // ===== FUNGSI CARI EKSPEDISI (DEBOUNCE) =====
     const onSearchEkspedisi = (query) => {
         clearTimeout(searchTimeout)
@@ -427,6 +498,16 @@
         }
     }
 
+    async function fetchAreaList() {
+        try {
+            const res = await axios.get('/api/area')
+            areaList.value = Array.isArray(res.data.data) ? res.data.data : []
+            console.log('Area list:',areaList.value)
+        } catch (err) {
+            console.error('Gagal load area:', err)
+        }
+    }
+
     async function fetchEkspedisiList() {
         try {
             const res = await axios.get('/api/ekspedisi')
@@ -446,8 +527,6 @@
             console.error('Gagal load ongkir:', err)
         }
     }
-
-    
 
     async function fetchToko() {
         loading.value = true
@@ -469,6 +548,7 @@
                 form.nama = toko.nama
                 form.kategori_toko_id = toko.kategori_toko_id
                 form.kota_id = toko.kota_id
+                form.area_id = toko.area_id
                 form.alamat = toko.alamat
                 form.disc_1 = toko.disc_1*100
                 form.disc_2 = toko.disc_2*100
@@ -482,6 +562,7 @@
                 // Gunakan helper function
                 setSelectedKategoriById(toko.kategori_toko_id)
                 setSelectedKotaById(toko.kota_id)
+                setSelectedAreaById(toko.area_id)
                 setSelectedEkspedisiById(toko.ekspedisi_id)
                 setSelectedOngkirById(toko.ongkir_id)
             } else {
@@ -499,6 +580,7 @@
         try {
             await fetchKategoriList() // ambil data master kategori barang dulu
             await fetchKotaList() // ambil data master kota dulu
+            await fetchAreaList() // ambil data master area dulu
             await fetchEkspedisiList() // ambil data master ekspedisi dulu
             await fetchOngkirList() // ambil data master ongkir dulu
             await fetchToko()    // baru set fetch Toko
@@ -514,14 +596,6 @@
 
     // ===== FUNGSI SUBMIT =====
     const handleSubmit = async () => {
-        form.kategori_toko_id = selectedKategori.value
-        form.kota_id = selectedKota.value
-        form.ekspedisi_id = selectedEkspedisi.value
-        form.ongkir_id = selectedOngkir.value
-        
-        console.log(form)
-
-        submitting.value = true
         successMessage.value = ''
         errorMessage.value = ''
 
@@ -564,6 +638,20 @@
         //     Kode: form.kode
         // }
 
+        // proses submit dimulai
+        submitting.value = true
+
+        form.kategori_toko_id = selectedKategori.value
+        form.kota_id = selectedKota.value
+        form.area_id = selectedArea.value
+        form.ekspedisi_id = selectedEkspedisi.value
+        form.ongkir_id = selectedOngkir.value
+        form.disc_1 = form.disc_1/100
+        form.disc_2 = form.disc_2/100
+        form.disc_3 = form.disc_3/100
+        
+        console.log(form)
+
         try {
             await axios.put(`/api/toko/${form.id}`, form) // parameter id
             successMessage.value = 'Toko berhasil diupdate!'
@@ -580,6 +668,10 @@
             errorMessage.value = 'Gagal update toko.'
         } finally {
             submitting.value = false
+            // Ubah value semua disc kembali ke format *100
+            form.disc_1 = form.disc_1*100
+            form.disc_2 = form.disc_2*100
+            form.disc_3 = form.disc_3*100
         }
     }
 </script>

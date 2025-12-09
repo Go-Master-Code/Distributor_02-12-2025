@@ -23,6 +23,24 @@ func ConvertToDTOKotaSingle(kota model.Kota) dto.KotaResponse {
 	return kotaDTO
 }
 
+func ConvertToDTOAreaPlural(area []model.Area) []dto.AreaResponse {
+	var areaDTO []dto.AreaResponse
+	for _, a := range area {
+		areaDTO = append(areaDTO, dto.AreaResponse{
+			ID:   a.ID,
+			Nama: a.Nama,
+		})
+	}
+	return areaDTO
+}
+
+func ConvertToDTOAreaSingle(area model.Area) dto.AreaResponse {
+	var areaDTO dto.AreaResponse
+	areaDTO.ID = area.ID
+	areaDTO.Nama = area.Nama
+	return areaDTO
+}
+
 func ConvertToDTOArtikelPlural(artikel []model.Artikel) []dto.ArtikelResponse {
 	var artikelDTO []dto.ArtikelResponse
 	for _, a := range artikel {
@@ -263,6 +281,8 @@ func ConvertToDTOTokoPlural(toko []model.Toko) []dto.TokoResponse {
 			KategoriTokoNama: t.KategoriToko.Nama,
 			KotaID:           t.KotaID,
 			KotaNama:         t.Kota.Nama,
+			AreaID:           t.AreaID,
+			AreaNama:         t.Area.Nama,
 			Alamat:           t.Alamat,
 			Disc1:            t.Disc1,
 			Disc2:            t.Disc2,
@@ -285,6 +305,8 @@ func ConvertToDTOTokoSingle(toko model.Toko) dto.TokoResponse {
 	tokoDTO.KategoriTokoNama = toko.KategoriToko.Nama
 	tokoDTO.KotaID = toko.KotaID
 	tokoDTO.KotaNama = toko.Kota.Nama
+	tokoDTO.AreaID = toko.AreaID
+	tokoDTO.AreaNama = toko.Area.Nama
 	tokoDTO.Alamat = toko.Alamat
 	tokoDTO.Disc1 = toko.Disc1
 	tokoDTO.Disc2 = toko.Disc2

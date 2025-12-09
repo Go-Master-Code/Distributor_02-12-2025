@@ -12,6 +12,7 @@ type ServiceToko interface {
 	GetTokoById(id int) (dto.TokoResponse, error)
 	SearchToko(nama string) ([]dto.TokoResponse, error)
 	CreateToko(brg dto.CreateTokoRequest) (dto.TokoResponse, error)
+	UpdateToko(id int, req dto.UpdateTokoRequest) (dto.TokoResponse, error)
 }
 
 type serviceToko struct {
@@ -63,6 +64,7 @@ func (s *serviceToko) CreateToko(toko dto.CreateTokoRequest) (dto.TokoResponse, 
 		Nama:           toko.Nama,
 		KategoriTokoID: toko.KategoriTokoID,
 		KotaID:         toko.KotaID,
+		AreaID:         toko.AreaID,
 		Alamat:         toko.Alamat,
 		Disc1:          toko.Disc1,
 		Disc2:          toko.Disc2,
@@ -78,5 +80,55 @@ func (s *serviceToko) CreateToko(toko dto.CreateTokoRequest) (dto.TokoResponse, 
 
 	// convert to dto
 	tokoDTO := helper.ConvertToDTOTokoSingle(newToko)
+	return tokoDTO, nil
+}
+
+func (s *serviceToko) UpdateToko(id int, req dto.UpdateTokoRequest) (dto.TokoResponse, error) {
+	// buat map untuk update data
+	var updateMap = map[string]any{}
+
+	// cek dan parsing req ke map
+	if req.Kode != nil {
+		updateMap["kode"] = *req.Kode // dereference
+	}
+	if req.Nama != nil {
+		updateMap["nama"] = *req.Nama
+	}
+	if req.KategoriTokoID != nil {
+		updateMap["kategori_toko_id"] = *req.KategoriTokoID
+	}
+	if req.KotaID != nil {
+		updateMap["kota_id"] = *req.KotaID
+	}
+	if req.AreaID != nil {
+		updateMap["area_id"] = *req.AreaID
+	}
+	if req.Alamat != nil {
+		updateMap["alamat"] = *req.Alamat
+	}
+	if req.Disc1 != nil {
+		updateMap["disc_1"] = *req.Disc1
+	}
+	if req.Disc2 != nil {
+		updateMap["disc_2"] = *req.Disc2
+	}
+	if req.Disc3 != nil {
+		updateMap["disc_3"] = *req.Disc3
+	}
+	if req.EkspedisiID != nil {
+		updateMap["ekspedisi_id"] = *req.EkspedisiID
+	}
+	if req.OngkirID != nil {
+		updateMap["ongkir_id"] = *req.OngkirID
+	}
+
+	updatedToko, err := s.repo.UpdateToko(id, updateMap)
+	if err != nil {
+		return dto.TokoResponse{}, err
+	}
+
+	// convert model to dto
+	tokoDTO := helper.ConvertToDTOTokoSingle(updatedToko)
+
 	return tokoDTO, nil
 }

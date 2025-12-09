@@ -466,7 +466,6 @@
         
         console.log(form)
 
-        submitting.value = true
         successMessage.value = ''
         errorMessage.value = ''
 
@@ -506,15 +505,8 @@
             return
         }
 
-        // const payload = {
-        //     merk_id: selectedMerk.value.id,
-        //     artikel_id: selectedArtikel.value.id,
-        //     warna_id: selectedWarna.value.id,
-        //     kategori_barang_id: selectedKategori.value.id,
-        //     jenis_barang_id: selectedJenis.value.id,
-        //     ukuran_barang_id: selectedUkuran.value?.id || null,
-        //     Kode: form.kode
-        // }
+        // proses submit dimulai setelah validasi selesai
+        submitting.value = true
 
         try {
             await axios.post('/api/barang', form)

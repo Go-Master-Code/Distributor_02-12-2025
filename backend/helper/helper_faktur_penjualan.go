@@ -135,19 +135,19 @@ func PrintHeader(merk string, jual dto.PenjualanResponse, kategoriSizeRange map[
 	b.WriteString(fmt.Sprintf("Brand: %-22s Jatuh Tempo: %s\n", merk, tglJatuhTempo.Format("2006-01-02")))
 
 	b.WriteString(strings.Repeat("─", 90) + "\n")
-	fmt.Fprintf(&b, "%-8s", "Kode")
-	fmt.Fprintf(&b, "%-10s", "Artikel")
+	// fmt.Fprintf(&b, "%-8s", "Kode") -> tidak pakai kolom kode
+	fmt.Fprintf(&b, "%-17s", "Artikel")
 	fmt.Fprintf(&b, "%-12s", "Warna")
 	for i, kat := range []string{"K", "A", "D"} {
 		if i > 0 {
 			if i == 2 {
-				fmt.Fprintf(&b, "%30s%-4s", "", kategoriLabel[kat])
+				fmt.Fprintf(&b, "%29s%-4s", "", kategoriLabel[kat])
 				for _, s := range kategoriSizeRange[kat] {
 					fmt.Fprintf(&b, "%-3d", s)
 				}
 				fmt.Fprintf(&b, "%3s%8s%9s\n", "Qty", "Harga", "Total")
 			} else {
-				fmt.Fprintf(&b, "%30s%-4s", "", kategoriLabel[kat])
+				fmt.Fprintf(&b, "%29s%-4s", "", kategoriLabel[kat])
 				for _, s := range kategoriSizeRange[kat] {
 					fmt.Fprintf(&b, "%-3d", s)
 				}
@@ -183,7 +183,7 @@ func PrintData(pivot map[string]*PivotRow, kategoriSizeRange map[string][]int) s
 		p := pivot[key]
 
 		// tampilkan artikel + warna
-		fmt.Fprintf(&b, "%-7s %-9s %-12s %-3s", p.Kode, p.Artikel, p.Warna, p.Kategori)
+		fmt.Fprintf(&b, "%-16s %-12s %-3s", p.Artikel, p.Warna, p.Kategori) // kode tidak ditampilkan, space untuk artikel
 
 		row := []int{}
 		for _, kat := range []string{"K", "A", "D"} {
@@ -238,17 +238,17 @@ func PrintSumarry(response dto.PenjualanResponse, totalQty int) string {
 	// fmt.Println("Grand total after diskon 3:", grandTotal)
 
 	//grandTotal = grandTotal - diskon3
-	b.WriteString(fmt.Sprintf("%70s %d %16d\n", "Total ", totalQty, response.Total))
+	b.WriteString(fmt.Sprintf("%69s %d %16d\n", "Total ", totalQty, response.Total))
 
 	b.WriteString(fmt.Sprintf("%63s %-26s\n", "", "──────────────────────────"))
 
-	b.WriteString(fmt.Sprintf("%12s %16s %-19s %23s (%4.0f%%) %8.0f\n", "Dibuat oleh:", "", "Penerima:", "Disc 1", response.Disc1*100, diskon1)) // %9.0F ARTINYA pembualan ke bilangan bulat tanpa desimal
-	b.WriteString(fmt.Sprintf("%73s (%4.0f%%) %8.0f\n", "Disc 2", response.Disc2*100, diskon2))
-	b.WriteString(fmt.Sprintf("%73s (%4.0f%%) %8.0f\n", "Disc 3", response.Disc3*100, diskon3))
+	b.WriteString(fmt.Sprintf("%12s %16s %-18s %23s (%4.0f%%) %8.0f\n", "Dibuat oleh:", "", "Penerima:", "Disc 1", response.Disc1*100, diskon1)) // %9.0F ARTINYA pembualan ke bilangan bulat tanpa desimal
+	b.WriteString(fmt.Sprintf("%72s (%4.0f%%) %8.0f\n", "Disc 2", response.Disc2*100, diskon2))
+	b.WriteString(fmt.Sprintf("%72s (%4.0f%%) %8.0f\n", "Disc 3", response.Disc3*100, diskon3))
 
 	b.WriteString(fmt.Sprintf("%63s %-26s\n", "", "──────────────────────────"))
 
-	b.WriteString(fmt.Sprintf("%12s %12s %16s  %37s %8d\n", "────────────", "", "────────────", "Grand Total", response.TotalNetto))
+	b.WriteString(fmt.Sprintf("%12s %12s %15s  %37s %8d\n", "────────────", "", "────────────", "Grand Total", response.TotalNetto))
 
 	b.WriteString(fmt.Sprintf("%29s %-26s\n", "", "Nama,Ttd,Stempel"))
 

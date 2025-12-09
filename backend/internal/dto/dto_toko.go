@@ -5,6 +5,7 @@ type CreateTokoRequest struct {
 	Nama           string  `json:"nama" binding:"required"`
 	KategoriTokoID int     `json:"kategori_toko_id" binding:"required"`
 	KotaID         int     `json:"kota_id" binding:"required"`
+	AreaID         int     `json:"area_id" binding:"required"`
 	Alamat         string  `json:"alamat" binding:"required"`
 	Disc1          float64 `json:"disc_1" binding:"required"`
 	Disc2          float64 `json:"disc_2" binding:"required"`
@@ -18,6 +19,7 @@ type UpdateTokoRequest struct {
 	Nama           *string  `json:"nama" binding:"omitempty"`
 	KategoriTokoID *int     `json:"kategori_toko_id" binding:"omitempty"`
 	KotaID         *int     `json:"kota_id" binding:"omitempty"`
+	AreaID         *int     `json:"area_id" binding:"omitempty"`
 	Alamat         *string  `json:"alamat" binding:"omitempty"`
 	Disc1          *float64 `json:"disc_1" binding:"omitempty"`
 	Disc2          *float64 `json:"disc_2" binding:"omitempty"`
@@ -34,6 +36,8 @@ type TokoResponse struct {
 	KategoriTokoNama string  `json:"kategori_toko_nama"`
 	KotaID           int     `json:"kota_id"`
 	KotaNama         string  `json:"kota_nama"`
+	AreaID           int     `json:"area_id"`
+	AreaNama         string  `json:"area_nama"`
 	Alamat           string  `json:"alamat"`
 	Disc1            float64 `json:"disc_1"`
 	Disc2            float64 `json:"disc_2"`

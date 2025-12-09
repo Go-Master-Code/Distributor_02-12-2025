@@ -11,7 +11,7 @@ type RepositoryBarang interface {
 	GetBarangById(id int) (model.Barang, error)
 	SearchBarang(nama string) ([]model.Barang, error)
 	CreateBarang(brg model.Barang) (model.Barang, error)
-	UpdateSupplier(id int, updateMap map[string]any) (model.Barang, error)
+	UpdateBarang(id int, updateMap map[string]any) (model.Barang, error)
 	UpdateStok(tx *gorm.DB, barang model.Barang) error
 }
 
@@ -66,7 +66,7 @@ func (r *repositoryBarang) CreateBarang(brg model.Barang) (model.Barang, error) 
 	return brg, nil
 }
 
-func (r *repositoryBarang) UpdateSupplier(id int, updateMap map[string]any) (model.Barang, error) {
+func (r *repositoryBarang) UpdateBarang(id int, updateMap map[string]any) (model.Barang, error) {
 	var barang model.Barang
 	// get data dulu
 	err := r.db.First(&barang, id).Error

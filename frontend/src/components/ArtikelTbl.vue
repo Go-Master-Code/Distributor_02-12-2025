@@ -1,8 +1,10 @@
 <template>
     <div>
         <div class="container-fluid">
-            <div class="mb-3" style="max-width: 300px;">
-                <div class="d-flex align-items-center gap-2">
+            <div class="mb-3 d-flex align-items-center gap-2" style="max-width: 500px;">
+                <button @click="tambahArtikel()" class="btn btn-primary flex-shrink-0">
+                    Tambah Artikel
+                </button>
                 <input
                     id="search"
                     autocomplete="off"
@@ -20,7 +22,6 @@
                 >
                     Clear
                 </button>
-                </div>
             </div>
 
             <table class="table table-bordered table-striped table-hover">

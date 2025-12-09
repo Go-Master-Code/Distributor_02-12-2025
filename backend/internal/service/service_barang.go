@@ -111,7 +111,7 @@ func (s *serviceBarang) UpdateBarang(id int, req dto.UpdateBarangRequest) (dto.B
 		updateMap["ukuran_id"] = *req.UkuranID // dereference
 	}
 
-	updatedBarang, err := s.repo.UpdateSupplier(id, updateMap)
+	updatedBarang, err := s.repo.UpdateBarang(id, updateMap)
 	if err != nil {
 		return dto.BarangResponse{}, err
 	}

@@ -28,44 +28,12 @@ func FormatAngka(n int) string {
 func GenerateReportPresensiAllPerPeriode(awal, akhir string, master []dto.PenjualanResponse, detil []dto.PenjualanDetailResponse) ([]byte, error) {
 	pdf := fpdf.New("L", "mm", "A4", "")
 	pdf.SetTitle("Laporan Penjualan", false)
+	pdf.SetAutoPageBreak(true, 15) // spasi tambahan jika perlu
 
-	// Footer halaman otomatis
-	pdf.SetFooterFunc(func() {
-		pdf.SetY(-15)
-		pdf.SetFont("Arial", "I", 10)
-		pdf.CellFormat(0, 10, "Halaman "+strconv.Itoa(pdf.PageNo()), "", 0, "C", false, 0, "")
-	})
-
-	pdf.AddPage()
-
-	// add logo
-	// pdf.Image("internal/utils/report/pf.jpg", 10, 10, 30, 0, false, "", 0, "")
-
-	// Judul
-	pdf.SetFont("Arial", "B", 20)
-
-	// beri spasi agar judul bisa sejajar logo
-	pdf.Ln(3)
-	pdf.CellFormat(0, 10, "Laporan Penjualan", "", 1, "C", false, 0, "") // judul rata tengah
-	pdf.Ln(1)                                                            // spasi tambahan jika perlu
-
-	// Periode
-	pdf.SetFont("Arial", "", 14)
-
-	// nama bulan string
-	periode := "Dari " + awal + " Sampai " + akhir
-
-	// rata tengah
-	pdf.CellFormat(0, 6, periode, "", 1, "C", false, 0, "")
-	pdf.Ln(2)
-
-	// Geser posisi Y ke bawah agar logo tidak tertimpa judul / tabel
-	// pdf.SetY(42)
-
-	// Setbackground color dan font color header
-	pdf.SetFillColor(255, 140, 60)  // Latar belakang orange (misalnya)
-	pdf.SetTextColor(255, 255, 255) // Teks putih
-	pdf.SetDrawColor(0, 0, 0)       // Border hitam
+	// // Setbackground color dan font color header
+	// pdf.SetFillColor(255, 140, 60)  // Latar belakang orange (misalnya)
+	// pdf.SetTextColor(255, 255, 255) // Teks putih
+	// pdf.SetDrawColor(0, 0, 0)       // Border hitam
 
 	// Header Tabel
 	pdf.SetFont("Arial", "B", 12)
@@ -73,20 +41,67 @@ func GenerateReportPresensiAllPerPeriode(awal, akhir string, master []dto.Penjua
 	widths := []float64{26, 20, 26, 25, 52, 32, 15, 28, 25, 28}                                                     // width masing-masing kolom
 	aligns := []string{"C", "C", "C", "C", "C", "C", "R", "R", "R", "R"}                                            // text-alignment masing-masing kolom
 
-	for i, str := range headers {
-		pdf.CellFormat(widths[i], 10, str, "1", 0, "C", true, 0, "")
-	}
-	pdf.Ln(-1)
+	// for i, str := range headers {
+	// 	pdf.CellFormat(widths[i], 10, str, "1", 0, "C", true, 0, "")
+	// }
+	// pdf.Ln(-1)
 
-	// Isi Tabel
+	// ===================================================
+	// ===============   HEADER FUNCTION   ===============
+	// ===================================================
+	pdf.SetHeaderFunc(func() {
+
+		// Logo
+		pdf.Image("internal/utils/report/penjualan/logo_msb.png", 62, 10, 40, 0, false, "", 0, "")
+
+		// Judul
+		pdf.SetFont("Arial", "B", 20)
+		pdf.Ln(3)
+		pdf.CellFormat(0, 10, "LAPORAN PENJUALAN", "", 1, "C", false, 0, "")
+		pdf.Ln(1)
+
+		// Nama Perusahaan
+		pdf.CellFormat(0, 10, "MITRA SUKSES BERSAMA", "", 1, "C", false, 0, "")
+		pdf.Ln(1)
+
+		// Periode
+		pdf.SetFont("Arial", "", 14)
+		periode := "Dari " + awal + " Sampai " + akhir
+		pdf.CellFormat(0, 6, periode, "", 1, "C", false, 0, "")
+		pdf.Ln(4)
+
+		// Header Table
+		pdf.SetFont("Arial", "B", 12)
+		pdf.SetFillColor(140, 180, 230) // #8CB4E6 biru muda soft
+		pdf.SetTextColor(0, 0, 0)       // warna teks header hitam
+		pdf.SetDrawColor(0, 0, 0)       // border hitam
+
+		for i, title := range headers {
+			pdf.CellFormat(widths[i], 10, title, "1", 0, "C", true, 0, "")
+		}
+		pdf.Ln(-1)
+
+		// Balik warna isi tabel ke hitam
+		pdf.SetTextColor(0, 0, 0)
+	})
+
+	// ===================================================
+	// ===============         FOOTER       ===============
+	// ===================================================
+	pdf.SetFooterFunc(func() {
+		pdf.SetY(-15)
+		pdf.SetFont("Arial", "I", 10)
+		pdf.CellFormat(0, 10, "Halaman "+strconv.Itoa(pdf.PageNo()), "", 0, "C", false, 0, "")
+	})
+
+	// Halaman pertama
+	pdf.AddPage()
+
+	// ===================================================
+	// ===============       TABLE BODY      ==============
+	// ===================================================
 	pdf.SetTextColor(0, 0, 0) // Supaya isi tabel kembali teks hitam
 	pdf.SetFont("Arial", "", 10)
-
-	// jumlah karyawan
-	// jmlKaryawan := 0
-
-	// dummy data
-	// pdf.CellFormat(widths[10], 10, "str", "1", 0, aligns[5], false, 0, "") // C = Center
 
 	// ambil nama brand
 	brand := detil[0].BarangMerk
@@ -128,26 +143,10 @@ func GenerateReportPresensiAllPerPeriode(awal, akhir string, master []dto.Penjua
 
 		pdf.Ln(-1)
 	}
-	// =======ISI DATA=======
-	// for _, penjualan := range detil {
-	// 	row := []string{
-	// 		// nomor row
-	// 		presensi.KaryawanID,
-	// 		presensi.Nama,
-	// 		strconv.Itoa(presensi.Kehadiran),
-	// 		strconv.Itoa(report.HariKerja - presensi.Kehadiran),
-	// 	}
 
-	// 	for j, str := range row {
-	// 		pdf.CellFormat(widths[j], 10, str, "1", 0, aligns[j], false, 0, "") // C = Center
-	// 	}
-
-	// 	// tambah counter jmlKaryawan
-	// 	jmlKaryawan += 1
-
-	// 	pdf.Ln(-1)
-	// }
-
+	// ===================================================
+	// ===============       TOTAL AKHIR     ==============
+	// ===================================================
 	pdf.SetFont("Arial", "B", 10)
 	pdf.CellFormat(widths[0]+widths[1]+widths[2]+widths[3]+widths[4]+widths[5]+widths[6]+widths[7]+widths[8]+widths[9], 10, "Total Penjualan Netto: "+FormatAngka(grandTotalNetto), "1", 0, "R", false, 0, "")
 	//pdf.CellFormat(28, 10, , "1", 0, "C", false, 0, "")

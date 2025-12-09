@@ -2,26 +2,26 @@
 MITRA SUKSES BERSAMA          Kepada: Toko Jual
 FAKTUR PENJUALAN                           
 No.Faktur: CONTOH             Kota: 
-Sales ID: 1                   Tanggal Faktur: 2025-12-05
-Brand: DESLE                  Jatuh Tempo: 2025-12-05
+Sales ID: 1                   Tanggal Faktur: 2025-12-09
+Brand: DESLE                  Jatuh Tempo: 2025-12-09
 ──────────────────────────────────────────────────────────────────────────────────────────
-Kode    Artikel   Warna       |K| 26 27 28 29 30 31                                                                                                             
-                              |A| 32 33 34 35 36 37 
-                              |D| 36 37 38 39 40 41 42 43 44 45 46 47 Qty   Harga    Total
+Artikel          Warna       |K| 26 27 28 29 30 31                                                                                                             
+                             |A| 32 33 34 35 36 37 
+                             |D| 36 37 38 39 40 41 42 43 44 45 46 47 Qty   Harga    Total
 ──────────────────────────────────────────────────────────────────────────────────────────
-CAV001  LEMBATA   HTM/HTM      K     27 28                             55  140000  7700000
+LEMBATA          HTM/HTM      K     27 28                             55  140000  7700000
 ──────────────────────────────────────────────────────────────────────────────────────────
-CAV002  LEMBATA   HTM/PUTIH    D                    42                 42  140000  5880000
+LEMBATA          HTM/PUTIH    D                    42                 42  140000  5880000
 ──────────────────────────────────────────────────────────────────────────────────────────
-CAV004  LEMBATA   BIRU MD      A           35                          35  139000  4865000
+LEMBATA          BIRU MD      A           35                          35  139000  4865000
 ──────────────────────────────────────────────────────────────────────────────────────────
-                                                                Total  18          1000000
+                                                               Total  18          1000000
                                                                 ──────────────────────────
-Dibuat oleh:                  Penerima:                            Disc 1 (  30%)   300000
-                                                                   Disc 2 (  15%)   105000
-                                                                   Disc 3 (   0%)        0
+Dibuat oleh:                  Penerima:                           Disc 1 (  30%)   300000
+                                                                  Disc 2 (  15%)   105000
+                                                                  Disc 3 (   0%)        0
                                                                 ──────────────────────────
-────────────                  ────────────                            Grand Total        0
+────────────                 ────────────                            Grand Total        0
                               Nama,Ttd,Stempel          
 NB: Apabila ada kekeliruan maksimal pemberitahuan               ────────────────────────── 
     10 hari setelah tanggal terima barang.                     | Transfer ke: TAHAPAN BCA | 

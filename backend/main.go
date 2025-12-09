@@ -138,6 +138,14 @@ func main() {
 
 	r.GET("/api/toko", handlerToko.GetToko) // 3 case dlm 1 api pakai query parameter: get all, by id, lazy search by nama
 	r.POST("/api/toko", handlerToko.CreateToko)
+	r.PUT("/api/toko/:id", handlerToko.UpdateToko)
+
+	// dependency injection area
+	repoArea := repository.NewRepositoryArea(database.DB)
+	serviceArea := service.NewServiceArea(repoArea)
+	handlerArea := handler.NewHandlerArea(serviceArea)
+
+	r.GET("/api/area", handlerArea.GetArea)
 
 	repoSales := repository.NewRepositorySales(database.DB)
 	serviceSales := service.NewServiceSales(repoSales)

@@ -12,6 +12,8 @@ type Toko struct {
 	KategoriToko   KategoriToko `json:"kategori_toko"`
 	KotaID         int          `json:"kota_id"`
 	Kota           Kota         `json:"kota"`
+	AreaID         int          `json:"area_id"`
+	Area           Area         `json:"area"`
 	Alamat         string       `json:"alamat"`
 	Disc1          float64      `json:"disc_1" gorm:"column:disc_1"` // tambahkan tag gorm, nama fieldnya harus sama dengan di mysql!
 	Disc2          float64      `json:"disc_2" gorm:"column:disc_2"` // tambahkan tag gorm, nama fieldnya harus sama dengan di mysql!

@@ -66,6 +66,13 @@
                                 <template v-else>▼</template>
                             </span>
                         </th>
+                        <th class="text-center" @click="sortBy('area_nama')">
+                            Area
+                            <span v-if="sortKey === 'area_nama'">
+                                <template v-if="sortAsc">▲</template>
+                                <template v-else>▼</template>
+                            </span>
+                        </th>
                         <th class="text-center" @click="sortBy('alamat')">
                             Alamat
                             <span v-if="sortKey === 'alamat'">
@@ -120,6 +127,7 @@
                         <td class="text-center">{{ toko.nama }}</td>
                         <td class="text-center">{{ toko.kategori_toko_nama }}</td>
                         <td class="text-center">{{ toko.kota_nama }}</td>
+                        <td class="text-center">{{ toko.area_nama }}</td>
                         <td class="text-center">{{ toko.alamat }}</td>
                         <td class="text-center">{{ toko.disc_1*100 }}%</td>
                         <td class="text-center">{{ toko.disc_2*100 }}%</td>
@@ -205,6 +213,7 @@
                 t.nama.toLowerCase().includes(keyword) ||
                 t.kategori_toko_nama.toLowerCase().includes(keyword) ||
                 t.kota_nama.toLowerCase().includes(keyword) ||
+                t.area_nama.toLowerCase().includes(keyword) ||
                 t.alamat.toLowerCase().includes(keyword) ||
                 String(t.disc_1).includes(keyword) || // <-- convert dulu angka ke string agar bisa di filter
                 String(t.disc_2).includes(keyword) || // <-- convert dulu angka ke string agar bisa di filter
