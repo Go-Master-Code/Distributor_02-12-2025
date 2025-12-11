@@ -37,9 +37,9 @@ func GenerateReportPresensiAllPerPeriode(awal, akhir string, master []dto.Penjua
 
 	// Header Tabel
 	pdf.SetFont("Arial", "B", 12)
-	headers := []string{"No. Faktur", "Sales", "Brand", "Tanggal", "Toko", "Kota", "Qty", "Bruto", "Disc", "Netto"} // judul header
-	widths := []float64{26, 20, 26, 25, 52, 32, 15, 28, 25, 28}                                                     // width masing-masing kolom
-	aligns := []string{"C", "C", "C", "C", "C", "C", "R", "R", "R", "R"}                                            // text-alignment masing-masing kolom
+	headers := []string{"Faktur", "Area", "Sales", "Brand", "Tanggal", "Toko", "Kota", "Qty", "Bruto", "Disc", "Netto"} // judul header
+	widths := []float64{20, 18, 20, 26, 25, 52, 32, 13, 25, 23, 25}                                                     // width masing-masing kolom
+	aligns := []string{"C", "C", "C", "C", "C", "C", "C", "R", "R", "R", "R"}                                           // text-alignment masing-masing kolom
 
 	// for i, str := range headers {
 	// 	pdf.CellFormat(widths[i], 10, str, "1", 0, "C", true, 0, "")
@@ -52,11 +52,11 @@ func GenerateReportPresensiAllPerPeriode(awal, akhir string, master []dto.Penjua
 	pdf.SetHeaderFunc(func() {
 
 		// Logo
-		pdf.Image("internal/utils/report/penjualan/logo_msb.png", 62, 10, 40, 0, false, "", 0, "")
+		pdf.Image("internal/utils/report/penjualan/logo_msb.png", 62, 8, 40, 0, false, "", 0, "")
 
 		// Judul
 		pdf.SetFont("Arial", "B", 20)
-		pdf.Ln(3)
+		pdf.Ln(1)
 		pdf.CellFormat(0, 10, "LAPORAN PENJUALAN", "", 1, "C", false, 0, "")
 		pdf.Ln(1)
 
@@ -106,26 +106,40 @@ func GenerateReportPresensiAllPerPeriode(awal, akhir string, master []dto.Penjua
 	// ambil nama brand
 	brand := detil[0].BarangMerk
 
+	// grand total bruto
+	grandTotalBruto := 0
+
 	// grand total netto
 	grandTotalNetto := 0
 
+	// grand total qty (summary)
+	grandTotalQty := 0
+
 	for _, penjualan := range master {
+		// update += total bruto per master faktur
+		grandTotalBruto += penjualan.Total
+
 		// update += total netto per master faktur
 		grandTotalNetto += penjualan.TotalNetto
 
 		// Hitung Total Qty per Faktur
 		totalQty := 0
+
 		for _, d := range detil {
 			//log.Println("ID detil: ", d.PenjualanID)
 			//log.Println("ID master jual: ", penjualan.ID)
 			if d.PenjualanID == penjualan.ID { // match faktur berdasarkan foreign key ID
 				totalQty += d.Qty
 				// log.Println("Cocok!", totalQty)
+
+				// increment grand total qty per row data
+				grandTotalQty += d.Qty
 			}
 		}
 
 		row := []string{
 			penjualan.NoFaktur,
+			penjualan.TokoArea,
 			penjualan.SalesNama,
 			brand,
 			penjualan.TglPenjualan,
@@ -148,7 +162,11 @@ func GenerateReportPresensiAllPerPeriode(awal, akhir string, master []dto.Penjua
 	// ===============       TOTAL AKHIR     ==============
 	// ===================================================
 	pdf.SetFont("Arial", "B", 10)
-	pdf.CellFormat(widths[0]+widths[1]+widths[2]+widths[3]+widths[4]+widths[5]+widths[6]+widths[7]+widths[8]+widths[9], 10, "Total Penjualan Netto: "+FormatAngka(grandTotalNetto), "1", 0, "R", false, 0, "")
+	pdf.CellFormat(widths[0]+widths[1]+widths[2]+widths[3]+widths[4]+widths[5]+widths[6], 10, "Total Qty, Bruto, Netto:", "1", 0, "R", false, 0, "")
+	pdf.CellFormat(widths[7], 10, FormatAngka(grandTotalQty), "1", 0, "R", false, 0, "")
+	pdf.CellFormat(widths[8], 10, FormatAngka(grandTotalBruto), "1", 0, "R", false, 0, "")
+	pdf.CellFormat(widths[9], 10, "", "1", 0, "R", false, 0, "")
+	pdf.CellFormat(widths[10], 10, FormatAngka(grandTotalNetto), "1", 0, "R", false, 0, "")
 	//pdf.CellFormat(28, 10, , "1", 0, "C", false, 0, "")
 	pdf.Ln(-1)
 

@@ -329,6 +329,7 @@ func ConvertToDTOPenjualanSingle(penjualan model.Penjualan) dto.PenjualanRespons
 	jualDTO.TokoNama = penjualan.Toko.Nama
 	jualDTO.TokoAlamat = penjualan.Toko.Alamat
 	jualDTO.TokoKota = penjualan.Toko.Kota.Nama
+	jualDTO.TokoArea = penjualan.Toko.Area.Nama
 	jualDTO.Disc1 = penjualan.Toko.Disc1
 	jualDTO.Disc2 = penjualan.Toko.Disc2
 	jualDTO.Disc3 = penjualan.Toko.Disc3
@@ -352,6 +353,7 @@ func ConvertToDTOPenjualanPlural(penjualan []model.Penjualan) []dto.PenjualanRes
 			TokoNama:      p.Toko.Nama,
 			TokoAlamat:    p.Toko.Alamat,
 			TokoKota:      p.Toko.Kota.Nama,
+			TokoArea:      p.Toko.Area.Nama,
 			Disc1:         p.Toko.Disc1,
 			Disc2:         p.Toko.Disc2,
 			Disc3:         p.Toko.Disc3,

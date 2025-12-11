@@ -31,13 +31,13 @@ func (r *repositoryPenjualan) GetAllPenjualan() ([]model.Penjualan, error) {
 
 func (r *repositoryPenjualan) GetPenjualanPerPeriode(awal string, akhir string) ([]model.Penjualan, error) {
 	var penjualan []model.Penjualan
-	err := r.db.Preload("Sales").Preload("Toko").Preload("Toko.Kota").Preload("Items").Preload("Items.Barang").Where("tgl_penjualan BETWEEN ? AND ?", awal, akhir).Order("tgl_penjualan ASC, no_faktur ASC").Find(&penjualan).Error
+	err := r.db.Preload("Sales").Preload("Toko").Preload("Toko.Kota").Preload("Toko.Area").Preload("Items").Preload("Items.Barang").Where("tgl_penjualan BETWEEN ? AND ?", awal, akhir).Order("tgl_penjualan ASC, no_faktur ASC").Find(&penjualan).Error
 	return penjualan, err
 }
 
 func (r *repositoryPenjualan) GetPenjualanById(id int) (model.Penjualan, error) {
 	var penjualan model.Penjualan
-	err := r.db.Preload("Sales").Preload("Toko").Preload("Toko.Kota").Preload("Items").Preload("Items.Barang").First(&penjualan, id).Error
+	err := r.db.Preload("Sales").Preload("Toko").Preload("Toko.Kota").Preload("Toko.Area").Preload("Items").Preload("Items.Barang").First(&penjualan, id).Error
 	return penjualan, err
 }
 

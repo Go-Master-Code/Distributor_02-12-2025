@@ -128,7 +128,7 @@
                         <td class="text-center">{{ toko.kategori_toko_nama }}</td>
                         <td class="text-center">{{ toko.kota_nama }}</td>
                         <td class="text-center">{{ toko.area_nama }}</td>
-                        <td class="text-center">{{ toko.alamat }}</td>
+                        <td>{{ toko.alamat }}</td>
                         <td class="text-center">{{ toko.disc_1*100 }}%</td>
                         <td class="text-center">{{ toko.disc_2*100 }}%</td>
                         <td class="text-center">{{ toko.disc_3*100 }}%</td>

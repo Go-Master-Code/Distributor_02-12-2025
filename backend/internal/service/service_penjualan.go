@@ -213,6 +213,7 @@ func (s *servicePenjualan) CreatePenjualan(req dto.CreatePenjualanRequest) (dto.
 		TokoNama:      newPenjualan.Toko.Nama,
 		TokoAlamat:    newPenjualan.Toko.Alamat,
 		TokoKota:      newPenjualan.Toko.Kota.Nama,
+		TokoArea:      newPenjualan.Toko.Area.Nama,
 		Disc1:         newPenjualan.Toko.Disc1,
 		Disc2:         newPenjualan.Toko.Disc2,
 		Disc3:         newPenjualan.Toko.Disc3,

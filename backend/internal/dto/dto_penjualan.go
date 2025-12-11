@@ -23,6 +23,7 @@ type PenjualanResponse struct {
 	TokoNama      string                    `json:"toko_nama"`
 	TokoAlamat    string                    `json:"toko_alamat"`
 	TokoKota      string                    `json:"toko_kota"`
+	TokoArea      string                    `json:"toko_area"`
 	Disc1         float64                   `json:"disc_1"`
 	Disc2         float64                   `json:"disc_2"`
 	Disc3         float64                   `json:"disc_3"`
