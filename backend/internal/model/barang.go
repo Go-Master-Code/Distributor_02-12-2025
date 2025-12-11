@@ -21,9 +21,11 @@ type Barang struct {
 	JenisBarang      JenisBarang    `json:"jenis_barang"`
 	UkuranID         int            `json:"ukuran_id"`
 	Ukuran           Ukuran         `json:"ukuran"`
-	CreatedAt        time.Time      `gorm:"column:created_at;autoCreateTime"`
-	UpdatedAt        time.Time      `gorm:"column:updated_at;autoCreateTime;autoUpdateTime"`
-	DeletedAt        gorm.DeletedAt `gorm:"column:deleted_at"` //tipe datanya bukan time.Time tapi gorm.DeletedAt -> penanda soft delete
+	// ➜ Tambahkan relasi harga
+	HargaBarang []HargaBarang  `json:"harga_barang" gorm:"foreignKey:BarangID"`
+	CreatedAt   time.Time      `gorm:"column:created_at;autoCreateTime"`
+	UpdatedAt   time.Time      `gorm:"column:updated_at;autoCreateTime;autoUpdateTime"`
+	DeletedAt   gorm.DeletedAt `gorm:"column:deleted_at"` //tipe datanya bukan time.Time tapi gorm.DeletedAt -> penanda soft delete
 }
 
 func (Barang) TableName() string {

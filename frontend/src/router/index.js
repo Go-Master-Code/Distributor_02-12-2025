@@ -16,6 +16,8 @@ import ViewEditSupplier from '../views/ViewEditSupplier.vue'
 import ViewEditArtikel from '../views/ViewEditArtikel.vue'
 import ViewEditBarang from '../views/ViewEditBarang.vue'
 import ViewEditToko from '../views/ViewEditToko.vue'
+import HargaBarangList from '../views/HargaBarangList.vue'
+import HargaBarangView from '../views/HargaBarangView.vue'
 
 const routes = [
     { path: '/', name: 'Home', component: HomeView},
@@ -41,6 +43,9 @@ const routes = [
 
     { path: '/kartu_stok', name: 'KartuStok', component: KartuStokList}, // path yang akan diakses ketika running web
     { path: '/kartu_stok/tambah', name: 'TambahKartuStok', component: KartuStokView}, // tambah stok spesifik
+
+    { path: '/harga_barang', name: 'HargaBarang', component: HargaBarangList}, // path yang akan diakses ketika running web
+    { path: '/harga_barang/tambah', name: 'TambahHargaBarang', component: HargaBarangView}, // path yang akan diakses ketika running web
 ]
 
 const router = createRouter({

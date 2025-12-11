@@ -13,6 +13,7 @@ type ServiceBarang interface {
 	SearchBarang(nama string) ([]dto.BarangResponse, error)
 	CreateBarang(brg dto.CreateBarangRequest) (dto.BarangResponse, error)
 	UpdateBarang(id int, req dto.UpdateBarangRequest) (dto.BarangResponse, error)
+	GetAllHargaBarang() ([]dto.BarangResponse, error)
 }
 
 type serviceBarang struct {
@@ -118,5 +119,17 @@ func (s *serviceBarang) UpdateBarang(id int, req dto.UpdateBarangRequest) (dto.B
 
 	// convert to dto
 	barangDTO := helper.ConvertToDTOBarangSingle(updatedBarang)
+	return barangDTO, nil
+}
+
+func (s *serviceBarang) GetAllHargaBarang() ([]dto.BarangResponse, error) {
+	barang, err := s.repo.GetAllHargaBarang()
+	if err != nil {
+		return []dto.BarangResponse{}, err
+	}
+
+	// convert model to dto
+	barangDTO := helper.ConvertToDTOBarangPlural(barang)
+
 	return barangDTO, nil
 }

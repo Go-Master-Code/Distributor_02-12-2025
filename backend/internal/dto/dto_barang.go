@@ -35,7 +35,6 @@ type BarangResponse struct {
 	JenisBarangNama    string `json:"jenis_barang_nama"`
 	UkuranID           int    `json:"ukuran_id"`
 	UkuranNama         string `json:"ukuran_nama"`
-	// CreatedAt       time.Time      `gorm:"column:created_at;autoCreateTime"`
-	// UpdatedAt       time.Time      `gorm:"column:updated_at;autoCreateTime;autoUpdateTime"`
-	// DeletedAt       gorm.DeletedAt `gorm:"column:deleted_at"` //tipe datanya bukan time.Time tapi gorm.DeletedAt -> penanda soft delete
+	HargaTerbaru       int    `json:"harga_terbaru"`
+	MulaiBerlaku       string `json:"mulai_berlaku"`
 }

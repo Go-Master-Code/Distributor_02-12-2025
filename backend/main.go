@@ -130,6 +130,7 @@ func main() {
 	r.GET("/api/barang", handlerBarang.GetBarang)
 	r.POST("/api/barang", handlerBarang.CreateBarang)
 	r.PUT("/api/barang/:id", handlerBarang.UpdateBarang)
+	r.GET("/api/harga_barang", handlerBarang.GetAllHargaBarang)
 
 	// dependency injection toko
 	repoToko := repository.NewRepositoryToko(database.DB)
@@ -160,6 +161,7 @@ func main() {
 	handlerHarga := handler.NewHandlerHargaBarang(serviceHarga)
 
 	r.GET("/api/harga", handlerHarga.GetHargaBarang)
+	r.POST("/api/harga", handlerHarga.CreateHargaBarang)
 
 	// dependency injection penjualan detail
 	repoDetilJual := repository.NewRepositoryPenjualanDetail(database.DB)

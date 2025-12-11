@@ -13,6 +13,7 @@ type RepositoryBarang interface {
 	CreateBarang(brg model.Barang) (model.Barang, error)
 	UpdateBarang(id int, updateMap map[string]any) (model.Barang, error)
 	UpdateStok(tx *gorm.DB, barang model.Barang) error
+	GetAllHargaBarang() ([]model.Barang, error)
 }
 
 type repositoryBarang struct {
@@ -100,4 +101,19 @@ func (r *repositoryBarang) UpdateBarang(id int, updateMap map[string]any) (model
 
 func (r *repositoryBarang) UpdateStok(tx *gorm.DB, barang model.Barang) error {
 	return tx.Save(&barang).Error
+}
+
+func (r *repositoryBarang) GetAllHargaBarang() ([]model.Barang, error) {
+	var barang []model.Barang
+	err := r.db.
+		Preload("KategoriBarang").
+		Preload("Merk").
+		Preload("Artikel").
+		Preload("Warna").
+		Preload("JenisBarang").
+		Preload("Ukuran").
+		Preload("HargaBarang"). // preload semua harga
+		Find(&barang).Error
+	// GORM akan membuat query JOIN untuk HargaBarang dan menaruh semua harga dalam slice HargaBarang di tiap Barang.
+	return barang, err
 }

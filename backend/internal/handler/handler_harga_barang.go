@@ -2,6 +2,7 @@ package handler
 
 import (
 	"api-distributor/helper"
+	"api-distributor/internal/dto"
 	"api-distributor/internal/service"
 	"strconv"
 
@@ -49,20 +50,20 @@ func (h *handlerHargaBarang) GetHargaBarang(c *gin.Context) {
 	}
 }
 
-// func (h *handlerHargaBarang) CreateHargaBarang(c *gin.Context) {
-// 	var harga dto.CreateHargaBarangRequest
-// 	// parsing json body
-// 	err := c.ShouldBindJSON(&harga)
-// 	if err != nil {
-// 		helper.ErrorParsingRequestBody(c, err)
-// 		return
-// 	}
+func (h *handlerHargaBarang) CreateHargaBarang(c *gin.Context) {
+	var harga dto.CreateHargaBarangRequest
+	// parsing json body
+	err := c.ShouldBindJSON(&harga)
+	if err != nil {
+		helper.ErrorParsingRequestBody(c, err)
+		return
+	}
 
-// 	newHargaBarang, err := h.service.CreateHargaBarang(harga)
-// 	if err != nil {
-// 		helper.ErrorCreateData(c, err)
-// 		return
-// 	}
+	newHargaBarang, err := h.service.CreateHargaBarang(harga)
+	if err != nil {
+		helper.ErrorCreateData(c, err)
+		return
+	}
 
-// 	helper.StatusSuksesCreateData(c, newHargaBarang)
-// }
+	helper.StatusSuksesCreateData(c, newHargaBarang)
+}

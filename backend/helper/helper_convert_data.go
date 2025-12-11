@@ -3,6 +3,7 @@ package helper
 import (
 	"api-distributor/internal/dto"
 	"api-distributor/internal/model"
+	"time"
 )
 
 func ConvertToDTOKotaPlural(kota []model.Kota) []dto.KotaResponse {
@@ -230,6 +231,22 @@ func ConvertToDTOOngkirSingle(ongkir model.Ongkir) dto.OngkirResponse {
 func ConvertToDTOBarangPlural(barang []model.Barang) []dto.BarangResponse {
 	var barangDTO []dto.BarangResponse
 	for _, b := range barang {
+		// pastikan barang ada harganya
+		hargaTerbaru := 0
+
+		// tanggal mulai berlaku harganya
+		mulaiBerlaku := "-"
+
+		// cari harga terbaru
+		var latest time.Time
+		for _, h := range b.HargaBarang {
+			if h.MulaiBerlaku.After(latest) {
+				hargaTerbaru = h.Harga
+				mulaiBerlaku = h.MulaiBerlaku.Format("2006-01-02")
+				latest = h.MulaiBerlaku
+			}
+		}
+
 		barangDTO = append(barangDTO, dto.BarangResponse{
 			ID:                 b.ID,
 			Kode:               b.Kode,
@@ -245,6 +262,8 @@ func ConvertToDTOBarangPlural(barang []model.Barang) []dto.BarangResponse {
 			JenisBarangNama:    b.JenisBarang.Nama,
 			UkuranID:           b.UkuranID,
 			UkuranNama:         b.Ukuran.Nama,
+			HargaTerbaru:       hargaTerbaru,
+			MulaiBerlaku:       mulaiBerlaku,
 		})
 	}
 	return barangDTO
@@ -266,6 +285,25 @@ func ConvertToDTOBarangSingle(barang model.Barang) dto.BarangResponse {
 	barangDTO.JenisBarangNama = barang.JenisBarang.Nama
 	barangDTO.UkuranID = barang.UkuranID
 	barangDTO.UkuranNama = barang.Ukuran.Nama
+
+	// pastikan barang ada harganya
+	hargaTerbaru := 0
+
+	// tanggal mulai berlaku harganya
+	mulaiBerlaku := "-"
+
+	// cari harga terbaru
+	var latest time.Time
+	for _, h := range barang.HargaBarang {
+		if h.MulaiBerlaku.After(latest) {
+			hargaTerbaru = h.Harga
+			mulaiBerlaku = h.MulaiBerlaku.Format("2006-01-02")
+			latest = h.MulaiBerlaku
+		}
+	}
+
+	barangDTO.HargaTerbaru = hargaTerbaru
+	barangDTO.MulaiBerlaku = mulaiBerlaku
 
 	return barangDTO
 }
@@ -417,6 +455,14 @@ func ConvertToDTOHargaBarangPlural(hb []model.HargaBarang) []dto.HargaBarangResp
 			MulaiBerlaku: h.MulaiBerlaku.Format("2006-01-02"),
 		})
 	}
+	return hbDTO
+}
+
+func ConvertToHargaBarangSingle(hb model.HargaBarang) dto.HargaBarangResponse {
+	var hbDTO dto.HargaBarangResponse
+	hbDTO.BarangID = hb.BarangID
+	hbDTO.Harga = hb.Harga
+	hbDTO.MulaiBerlaku = hb.MulaiBerlaku.Format("2006-01-02")
 	return hbDTO
 }
 

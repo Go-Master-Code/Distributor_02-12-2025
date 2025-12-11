@@ -127,3 +127,13 @@ func (h *handlerBarang) UpdateBarang(c *gin.Context) {
 
 	helper.StatusSuksesUpdateData(c, barangDTO)
 }
+
+func (h *handlerBarang) GetAllHargaBarang(c *gin.Context) {
+	barangDTO, err := h.service.GetAllHargaBarang()
+	if err != nil {
+		helper.ErrorDataNotFound(c)
+		return
+	}
+
+	helper.StatusSuksesGetData(c, barangDTO)
+}
